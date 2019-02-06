@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TSProject</string>
+    <string name="activity_title">Tasas</string>
+    <string name="details_gd_label">g/d</string>
+    <string name="details_cvf_label">cvf</string>
+    <string name="details_cv_label">cv</string>
+    <string name="details_pkw_label">pkW</string>
+    <string name="details_period_label">periodo comercial</string>
+</resources>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout >
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
         <variable
             name="item"
-            type="es.developer.achambi.tsproject.VehiclePresentation">
+            type="es.developer.achambi.tsproject.VehicleOverviewPresentation">
         </variable>
     </data>
     <android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
@@ -18,16 +18,27 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/barrier" />
+
             <TextView
                 android:id="@+id/brand_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                tools:text="ALFA ROMEO"
-                android:text="@{item.brand}"
+                android:text="@{item.vehicle.brand}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="ALFA ROMEO" />
 
             <TextView
                 android:id="@+id/model_text"
@@ -36,25 +47,84 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@{item.model}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/value"
+                android:paddingBottom="8dp"
+                android:text="@{item.vehicle.model}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/brand_text"
                 tools:text="ALFA ROMEO Something.." />
 
             <TextView
-                android:id="@+id/value"
+                android:id="@+id/depreciation_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="@{item.depreciationValue}"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                tools:text="2300€"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/percent_increase_value"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/percent_increase_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="@{item.value}"
-                app:layout_constraintBottom_toBottomOf="@+id/model_text"
-
+                android:text="@{item.percentIncreaseValue}"
+                tools:text="2333€"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/depreciation_value_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/model_text"
-                tools:text="2344" />
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/depreciation_value_text"
+                app:layout_constraintTop_toTopOf="@+id/depreciation_value_text" />
+
+            <android.support.constraint.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="model_text,brand_text" />
+
+            <TextView
+                android:id="@+id/vehicle_year_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/drawable_tag_background"
+                android:padding="4dp"
+                tools:text="2015"
+                android:text="@{item.year}"
+                android:textColor="@color/primary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/depreciation_value_text"
+                app:layout_constraintEnd_toStartOf="@+id/depreciation_value_text"
+                app:layout_constraintTop_toTopOf="@+id/depreciation_value_text" />
+
+            <TextView
+                android:id="@+id/vehicle_percent_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:text="@{item.percent}"
+                tools:text="4%"
+                android:textSize="12sp"
+                android:background="@drawable/drawable_tag_background"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/percent_increase_value"
+                app:layout_constraintEnd_toStartOf="@+id/percent_increase_value"
+                app:layout_constraintTop_toTopOf="@+id/percent_increase_value" />
+
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </layout>

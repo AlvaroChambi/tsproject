@@ -18,10 +18,11 @@ public class VehiclePresentation implements SearchListData, Parcelable {
     public final String cvf;
     public final String pkW;
     public final String period;
+    public final String cc;
 
     public VehiclePresentation(int id, String brand, String model, String value,
                                String gd, String cv, String cvf, String pkW,
-                               String period) {
+                               String period, String cc) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -31,6 +32,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         this.cvf = cvf;
         this.pkW = pkW;
         this.period = period;
+        this.cc = cc;
     }
 
     protected VehiclePresentation(Parcel in) {
@@ -43,6 +45,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         cvf = in.readString();
         pkW = in.readString();
         period = in.readString();
+        cc = in.readString();
     }
 
     @Override
@@ -56,6 +59,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         dest.writeString(cvf);
         dest.writeString(pkW);
         dest.writeString(period);
+        dest.writeString(cc);
     }
 
     @Override
@@ -105,7 +109,8 @@ public class VehiclePresentation implements SearchListData, Parcelable {
                     data.cv,
                     data.cvf,
                     data.potencia,
-                    data.periodo
+                    data.periodo,
+                    data.cc
             );
         }
 

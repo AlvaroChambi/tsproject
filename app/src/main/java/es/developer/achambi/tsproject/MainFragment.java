@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -21,7 +23,7 @@ import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 import es.developer.achambi.tsproject.model.data;
 
 public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
-        SearchAdapterDecorator.OnItemClickedListener<VehiclePresentation> {
+        SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
     private Adapter adapter;
     private AppDatabase database;
     private MainExecutor executor;
@@ -33,6 +35,9 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     private EditText cvfEditText;
     private EditText periodEditText;
     private EditText ccEditText;
+    private EditText cvEditText;
+    private EditText pkwEditText;
+    private EditText cylindersEditText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +61,10 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
             public void onSuccess(Response<ArrayList<data>> response) {
                 hideLoading();
                 vehicles = response.getData();
-                adapter.setData( VehiclePresentation.Builder.build( vehicles ) );
+                ArrayList<VehicleOverview> vehicleOverviews = buildVehicles(
+                        vehicles, periodEditText.getText().toString() );
+                adapter.setData( VehicleOverviewPresentation.Builder
+                        .build( getActivity(), vehicleOverviews ) );
                 presentAdapterData();
             }
 
@@ -67,6 +75,17 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
             }
         });
 
+    }
+
+    private ArrayList<VehicleOverview> buildVehicles( ArrayList<data> dataList, String year ) {
+        ArrayList<VehicleOverview> vehicleOverviews = new ArrayList<>();
+        for( data item : dataList ) {
+            VehicleOverview vehicle = new VehicleOverview();
+            vehicle.setVehicle( item );
+            vehicle.setYear( year );
+            vehicleOverviews.add( vehicle );
+        }
+        return vehicleOverviews;
     }
 
     @Override
@@ -90,8 +109,15 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         cvfEditText = header.findViewById(R.id.cvf_edit_text);
         periodEditText = header.findViewById(R.id.period_edit_text);
         ccEditText = header.findViewById(R.id.cc_edit_text);
+        cvEditText = header.findViewById(R.id.cv_edit_text);
+        pkwEditText = header.findViewById(R.id.pkw_edit_text);
+        cylindersEditText = header.findViewById(R.id.cylinders_edit_text);
 
         header.findViewById(R.id.header_search_button).setOnClickListener(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     }
 
     @Override
@@ -131,6 +157,9 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                 String cvf = cvfEditText.getText().toString();
                 String period = periodEditText.getText().toString();
                 String cc = ccEditText.getText().toString();
+                String cylinders = cylindersEditText.getText().toString();
+                String cv = cvEditText.getText().toString();
+                String pKW = pkwEditText.getText().toString();
 
                 for( data vehicle : vehicles ) {
                     if( vehicle.marca.toLowerCase().
@@ -143,7 +172,13 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                                     contains( cvf.toLowerCase() ) &&
                             vehicle.cc.toLowerCase().
                                     contains( cc.toLowerCase() ) &&
-                            isInPeriod( period, vehicle.periodo ) ) {
+                            isInPeriod( period, vehicle.periodo ) &&
+                            vehicle.cilindros.toLowerCase()
+                                    .contains( cylinders.toLowerCase() ) &&
+                            vehicle.cv.toLowerCase()
+                                    .contains( cv.toLowerCase() ) &&
+                            vehicle.potencia.toLowerCase()
+                                    .contains( pKW.toLowerCase() ) ) {
                         filtered.add( vehicle );
                     }
                 }
@@ -153,7 +188,10 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
             @Override
             public void onSuccess(Response<ArrayList<data>> response) {
                 hideLoading();
-                adapter.setData( VehiclePresentation.Builder.build( response.getData() ) );
+                ArrayList<VehicleOverview> vehicleOverviews = buildVehicles(
+                        response.getData(), periodEditText.getText().toString() );
+                adapter.setData( VehicleOverviewPresentation.Builder
+                        .build( getActivity(), vehicleOverviews ) );
                 presentAdapterData();
             }
 
@@ -166,14 +204,14 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     }
 
     @Override
-    public void onItemClicked(VehiclePresentation item) {
+    public void onItemClicked(VehicleOverviewPresentation item) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         VehicleDetailsFragment detailsFragment =
-                VehicleDetailsFragment.newInstance( item );
+                VehicleDetailsFragment.newInstance( item.vehicle );
         detailsFragment.show( transaction, "" );
     }
 
-    class Adapter extends SearchAdapterDecorator<VehiclePresentation,ViewHolder> {
+    class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {
 
         @Override
         public int getLayoutResource() {
@@ -187,7 +225,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         }
 
         @Override
-        public void bindViewHolder(ViewHolder holder, VehiclePresentation item) {
+        public void bindViewHolder(ViewHolder holder, VehicleOverviewPresentation item) {
             holder.binding.setItem( item );
         }
 

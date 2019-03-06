@@ -1,14 +1,18 @@
 package es.developer.achambi.tsproject;
 
+import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,13 +21,15 @@ import es.developer.achambi.coreframework.threading.MainExecutor;
 import es.developer.achambi.coreframework.threading.Request;
 import es.developer.achambi.coreframework.threading.Response;
 import es.developer.achambi.coreframework.threading.ResponseHandler;
+import es.developer.achambi.coreframework.ui.QuickDetailPopup;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 import es.developer.achambi.tsproject.model.data;
 
-public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
-        SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
+import static android.support.v7.widget.RecyclerView.NO_POSITION;
+
+public class MainFragment extends BaseSearchListFragment implements View.OnClickListener{
     private Adapter adapter;
     private AppDatabase database;
     private MainExecutor executor;
@@ -44,37 +50,11 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         super.onCreate(savedInstanceState);
         database = AppDatabase.buildDatabase(getActivity());
         executor = MainExecutor.buildExecutor();
-        adapter.setListener(this);
     }
 
     @Override
     public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
         super.onViewSetup(view, savedInstanceState);
-        startLoading();
-        executor.executeRequest(new Request<ArrayList<data>>() {
-            @Override
-            public Response<ArrayList<data>> perform() throws Exception {
-                return new Response<>(new ArrayList<data>( database.getRowDao().queryAll()) );
-            }
-        }, new ResponseHandler<ArrayList<data>>() {
-            @Override
-            public void onSuccess(Response<ArrayList<data>> response) {
-                hideLoading();
-                vehicles = response.getData();
-                ArrayList<VehicleOverview> vehicleOverviews = buildVehicles(
-                        vehicles, periodEditText.getText().toString() );
-                adapter.setData( VehicleOverviewPresentation.Builder
-                        .build( getActivity(), vehicleOverviews ) );
-                presentAdapterData();
-            }
-
-            @Override
-            public void onError(Error error) {
-                super.onError(error);
-                showError(error);
-            }
-        });
-
     }
 
     private ArrayList<VehicleOverview> buildVehicles( ArrayList<data> dataList, String year ) {
@@ -147,9 +127,10 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     private void applyFilters() {
         startLoading();
 
-        executor.executeRequest(new Request<ArrayList<data>>() {
+        executor.executeRequest(new Request<ArrayList<VehicleOverviewPresentation>>() {
             @Override
-            public Response<ArrayList<data>> perform() throws Exception {
+            public Response<ArrayList<VehicleOverviewPresentation>> perform() throws Exception {
+                vehicles = new ArrayList<>( database.getRowDao().queryAll() );
                 ArrayList<data> filtered = new ArrayList<>();
                 String brand = brandEditText.getText().toString();
                 String model = modelEditText.getText().toString();
@@ -182,16 +163,16 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                         filtered.add( vehicle );
                     }
                 }
-                return new Response<>( filtered );
+                ArrayList<VehicleOverview> vehicles = buildVehicles(
+                        filtered, periodEditText.getText().toString() );
+                return new Response<>( VehicleOverviewPresentation.Builder
+                        .build( getActivity(), vehicles ) );
             }
-        }, new ResponseHandler<ArrayList<data>>() {
+        }, new ResponseHandler<ArrayList<VehicleOverviewPresentation>>() {
             @Override
-            public void onSuccess(Response<ArrayList<data>> response) {
+            public void onSuccess(Response<ArrayList<VehicleOverviewPresentation>> response) {
                 hideLoading();
-                ArrayList<VehicleOverview> vehicleOverviews = buildVehicles(
-                        response.getData(), periodEditText.getText().toString() );
-                adapter.setData( VehicleOverviewPresentation.Builder
-                        .build( getActivity(), vehicleOverviews ) );
+                adapter.setData( response.getData() );
                 presentAdapterData();
             }
 
@@ -203,12 +184,26 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         });
     }
 
-    @Override
-    public void onItemClicked(VehicleOverviewPresentation item) {
+    private void onVehicleItemClicked(VehicleOverviewPresentation item) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         VehicleDetailsFragment detailsFragment =
                 VehicleDetailsFragment.newInstance( item.vehicle );
         detailsFragment.show( transaction, "" );
+    }
+
+    private void onVehicleValueClicked(VehicleOverviewPresentation item, View view) {
+        @SuppressLint("InflateParams") View detailsView =  LayoutInflater.from(getActivity())
+                .inflate( R.layout.value_quick_details_layout, null );
+        TextView baseValue = detailsView.findViewById(R.id.values_details_base_value_text);
+        TextView depreciationText = detailsView.findViewById(R.id.values_details_depreciation_year_text);
+        TextView depreciationValue = detailsView.findViewById(R.id.values_details_depreciation_value_text);
+        TextView taxIncrease = detailsView.findViewById(R.id.values_details_taxes_increase_value);
+        baseValue.setText( item.vehicle.value );
+        depreciationText.setText( getResources()
+                .getString( R.string.vehicle_value_details_depreciation, item.year ) );
+        depreciationValue.setText( item.depreciationValue );
+        taxIncrease.setText( item.percentIncreaseValue );
+        QuickDetailPopup.displayDetails( detailsView, view );
     }
 
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {
@@ -222,6 +217,29 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         public ViewHolder createViewHolder(View rootView) {
             ModelResultItemBinding binding = DataBindingUtil.bind(rootView);
             return new ViewHolder(binding);
+        }
+
+        @Override
+        protected void registerListeners(final ViewHolder viewHolder,
+                                         final SortedList<VehicleOverviewPresentation> data) {
+            viewHolder.itemView.findViewById(R.id.view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = viewHolder.getAdapterPosition();
+                    if( position != NO_POSITION ) {
+                        onVehicleValueClicked( data.get( position ), v );
+                    }
+                }
+            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = viewHolder.getAdapterPosition();
+                    if( position != NO_POSITION ) {
+                        onVehicleItemClicked( data.get( position ) );
+                    }
+                }
+            });
         }
 
         @Override

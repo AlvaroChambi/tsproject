@@ -1,5 +1,6 @@
 package es.developer.achambi.tsproject;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -85,7 +86,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
     }
 
     @Override
-    public int getId() {
+    public long getId() {
         if( model != null ) {
             return model.hashCode();
         } else {
@@ -95,7 +96,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
     }
 
     static class Builder {
-        public static VehiclePresentation build(data data) {
+        public static VehiclePresentation build(Context context, data data) {
             int id = 0;
             if(data.modelo != null) {
                 id = data.modelo.hashCode();
@@ -104,7 +105,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
                     id,
                     data.marca,
                     data.modelo,
-                    data.valor,
+                    context.getResources().getString(R.string.vehicle_value_label, data.valor),
                     data.gD,
                     data.cv,
                     data.cvf,
@@ -112,14 +113,6 @@ public class VehiclePresentation implements SearchListData, Parcelable {
                     data.periodo,
                     data.cc
             );
-        }
-
-        public static ArrayList<VehiclePresentation> build(ArrayList<data> dataList) {
-            ArrayList<VehiclePresentation> list = new ArrayList<>();
-            for ( es.developer.achambi.tsproject.model.data data : dataList ) {
-                list.add( build(data) );
-            }
-            return list;
         }
     }
 }

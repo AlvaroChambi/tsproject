@@ -32,7 +32,7 @@ public class VehicleOverviewPresentation implements SearchListData {
     }
 
     @Override
-    public int getId() {
+    public long getId() {
         return vehicle.getId();
     }
 
@@ -40,7 +40,7 @@ public class VehicleOverviewPresentation implements SearchListData {
         public static VehicleOverviewPresentation build(Context context,
                                                         VehicleOverview vehicleOverview ) {
             return new VehicleOverviewPresentation(
-                    VehiclePresentation.Builder.build( vehicleOverview.getVehicle() ),
+                    VehiclePresentation.Builder.build( context, vehicleOverview.getVehicle() ),
                     buildPercentString( context, VehicleOverview.TAX_VALUE ),
                     buildYearString( context, vehicleOverview.getYear() ),
                     buildValue( context, vehicleOverview.getDepreciationValue() ),
@@ -71,15 +71,15 @@ public class VehicleOverviewPresentation implements SearchListData {
         private static String buildValue( Context context, Float value ) {
             if( value != null ) {
                 return context.getResources().getString( R.string.vehicle_value_label,
-                        String.valueOf( round( value, VALUE_DECIMAL_PLACE ) ) );
+                        String.valueOf( round( value ) ) );
             } else {
                 return context.getResources().getString( R.string.empty_value );
             }
         }
 
-        private static float round(float d, int decimalPlace) {
+        private static float round(float d) {
             BigDecimal bd = new BigDecimal(Float.toString(d));
-            bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+            bd = bd.setScale(VALUE_DECIMAL_PLACE, BigDecimal.ROUND_HALF_UP);
             return bd.floatValue();
         }
     }

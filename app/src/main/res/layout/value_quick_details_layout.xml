@@ -1,41 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/text_primary_background">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/text_secondary_background">
 
     <TextView
         android:id="@+id/textView14"
+        style="@style/quick_detail_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        style="@style/quick_detail_text_style"
+        android:text="@string/vehicle_value_details_description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="El valor mostrado se calcula tomando el valor base y aplicando la depreciación y los impuestos de la Comunidad de Madrid (4%) " />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView16"
+        android:id="@+id/values_details_depreciation_year_text"
+        style="@style/quick_detail_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/vehicle_value_details_depreciation"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+    <TextView
+        android:id="@+id/values_details_depreciation_value_text"
+        style="@style/quick_detail_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/values_details_depreciation_year_text"
+        app:layout_constraintStart_toEndOf="@+id/values_details_depreciation_year_text"
+        app:layout_constraintTop_toTopOf="@+id/values_details_depreciation_year_text"
+        tools:text="2012" />
+
+    <TextView
+        android:id="@+id/textView12"
         style="@style/quick_detail_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Valor con depreciación para vehivulo del año 2000:"
+        android:text="@string/vehicle_value_details_base_value"
         app:layout_constraintStart_toStartOf="@+id/textView14"
         app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/values_details_base_value_text"
         style="@style/quick_detail_text_style"
-        android:layout_width="60dp"
-        android:layout_height="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView16"
-        app:layout_constraintStart_toEndOf="@+id/textView16"
-        app:layout_constraintTop_toTopOf="@+id/textView16"
-        tools:text="2012" />
+        android:textStyle="bold"
+        tools:text="2100"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+    <TextView
+        android:id="@+id/textView20"
+        style="@style/quick_detail_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/vehicle_value_details_increment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/values_details_depreciation_year_text"
+        app:layout_constraintTop_toBottomOf="@+id/values_details_depreciation_year_text"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/values_details_taxes_increase_value"
+        style="@style/quick_detail_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textStyle="bold"
+        tools:text="2034"
+        app:layout_constraintBottom_toBottomOf="@+id/textView20"
+        app:layout_constraintStart_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="@+id/textView20" />
 </android.support.constraint.ConstraintLayout>

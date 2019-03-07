@@ -37,14 +37,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
 
     private EditText brandEditText;
     private EditText modelEditText;
-    private EditText gdEditText;
-    private EditText cvfEditText;
     private EditText periodEditText;
-    private EditText ccEditText;
-    private EditText cvEditText;
-    private EditText pkwEditText;
-    private EditText cylindersEditText;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,19 +78,14 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     public void onHeaderSetup(View header) {
         brandEditText = header.findViewById(R.id.brand_edit_text);
         modelEditText = header.findViewById(R.id.model_edit_text);
-        gdEditText = header.findViewById(R.id.gd_edit_text);
-        cvfEditText = header.findViewById(R.id.cvf_edit_text);
         periodEditText = header.findViewById(R.id.period_edit_text);
-        ccEditText = header.findViewById(R.id.cc_edit_text);
-        cvEditText = header.findViewById(R.id.cv_edit_text);
-        pkwEditText = header.findViewById(R.id.pkw_edit_text);
-        cylindersEditText = header.findViewById(R.id.cylinders_edit_text);
-
+        brandEditText.requestFocus();
         header.findViewById(R.id.header_search_button).setOnClickListener(this);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
     }
 
     @Override
@@ -134,13 +122,13 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                 ArrayList<data> filtered = new ArrayList<>();
                 String brand = brandEditText.getText().toString();
                 String model = modelEditText.getText().toString();
-                String gd = gdEditText.getText().toString();
-                String cvf = cvfEditText.getText().toString();
                 String period = periodEditText.getText().toString();
-                String cc = ccEditText.getText().toString();
-                String cylinders = cylindersEditText.getText().toString();
-                String cv = cvEditText.getText().toString();
-                String pKW = pkwEditText.getText().toString();
+                String gd = "";
+                String cvf = "";
+                String cc = "";
+                String cylinders = "";
+                String cv = "";
+                String pKW = "";
 
                 for( data vehicle : vehicles ) {
                     if( vehicle.marca.toLowerCase().

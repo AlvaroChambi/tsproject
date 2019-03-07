@@ -15,4 +15,10 @@
     <string name="vehicle_value_details_depreciation">Valor aplicando la depreciación para vehiculo del año %1$s:</string>
     <string name="vehicle_value_details_base_value">Valor base:</string>
     <string name="vehicle_value_details_increment">Valor aplicando impuestos: </string>
+
+    <string name="search_filter_brand_text">Marca</string>
+    <string name="search_filter_model_text">Modelo</string>
+    <string name="search_filter_year_text">Año</string>
+
+    <string name="search_action_button">Buscar</string>
 </resources>

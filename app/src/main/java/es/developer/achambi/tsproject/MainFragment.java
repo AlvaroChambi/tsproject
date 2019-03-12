@@ -171,14 +171,15 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                 String pKW = pkWEditText.getText().toString();
 
                 for( data vehicle : vehicles ) {
-                    if( vehicle.marca.toLowerCase().
+                    if( validateData(vehicle) &&
+                            vehicle.marca.toLowerCase().
                             contains( brand.toLowerCase() ) &&
                             vehicle.modelo.toLowerCase().
                                     contains( model.toLowerCase() ) &&
                             vehicle.gD.toLowerCase().
                                     contains( gd.toLowerCase() ) &&
                             vehicle.cvf.toLowerCase().
-                                    contains( cvf.toLowerCase() ) &&
+                                    contains( formatValue(cvf).toLowerCase() ) &&
                             vehicle.cc.toLowerCase().
                                     contains( cc.toLowerCase() ) &&
                             isInPeriod( period, vehicle.periodo ) &&
@@ -191,6 +192,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                         filtered.add( vehicle );
                     }
                 }
+
                 ArrayList<VehicleOverview> vehicles = buildVehicles(
                         filtered, periodEditText.getText().toString() );
                 return new Response<>( VehicleOverviewPresentation.Builder
@@ -210,6 +212,28 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                 showError(error);
             }
         });
+    }
+
+    private boolean validateData( data data ) {
+        if( data.cilindros != null &&
+                data.potencia != null &&
+                data.cv != null &&
+                data.gD != null &&
+                data.periodo != null &&
+                data.marca != null &&
+                data.cc != null &&
+                data.cvf != null &&
+                data.valor != null ) {
+            return true;
+        }
+        return false;
+    }
+
+    private String formatValue( String cvf ) {
+        if( cvf.contains(".") ) {
+            return cvf.replace('.', ',');
+        }
+        return cvf;
     }
 
     private void onVehicleItemClicked(VehicleOverviewPresentation item) {

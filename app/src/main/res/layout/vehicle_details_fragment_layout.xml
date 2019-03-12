@@ -59,7 +59,6 @@
             android:textColor="@color/text_primary"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/details_gd_text"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />

@@ -25,6 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_year_text"
+            android:inputType="number"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -46,6 +48,8 @@
             android:id="@+id/model_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
             android:hint="@string/search_filter_model_text"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
@@ -69,6 +73,8 @@
             android:id="@+id/brand_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
             android:hint="@string/search_filter_brand_text"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
@@ -93,6 +99,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_gd_text"
+            android:inputType="text"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -115,6 +123,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_cvf_text"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -138,6 +148,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_cv_text"
+            android:inputType="number"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -161,6 +173,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_pkw_text"
+            android:inputType="number"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -183,6 +197,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_cylinders_text"
+            android:inputType="number"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -206,6 +222,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_cc_text"
+            android:inputType="number"
+            android:maxLines="1"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-
 import es.developer.achambi.coreframework.ui.presentation.SearchListData;
 import es.developer.achambi.tsproject.model.data;
 
@@ -20,10 +18,11 @@ public class VehiclePresentation implements SearchListData, Parcelable {
     public final String pkW;
     public final String period;
     public final String cc;
+    public final String cylinders;
 
     public VehiclePresentation(int id, String brand, String model, String value,
                                String gd, String cv, String cvf, String pkW,
-                               String period, String cc) {
+                               String period, String cc, String cylinders) {
         this.id = id;
         this.brand = brand;
         this.model = model;
@@ -34,6 +33,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         this.pkW = pkW;
         this.period = period;
         this.cc = cc;
+        this.cylinders = cylinders;
     }
 
     protected VehiclePresentation(Parcel in) {
@@ -47,6 +47,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         pkW = in.readString();
         period = in.readString();
         cc = in.readString();
+        cylinders = in.readString();
     }
 
     @Override
@@ -61,6 +62,7 @@ public class VehiclePresentation implements SearchListData, Parcelable {
         dest.writeString(pkW);
         dest.writeString(period);
         dest.writeString(cc);
+        dest.writeString(cylinders);
     }
 
     @Override
@@ -111,7 +113,8 @@ public class VehiclePresentation implements SearchListData, Parcelable {
                     data.cvf,
                     data.potencia,
                     data.periodo,
-                    data.cc
+                    data.cc,
+                    data.cilindros
             );
         }
     }

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import es.developer.achambi.coreframework.threading.Request;
 import es.developer.achambi.coreframework.threading.Response;
 import es.developer.achambi.coreframework.threading.ResponseHandler;
 import es.developer.achambi.coreframework.ui.QuickDetailPopup;
+import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
@@ -38,6 +40,17 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     private EditText brandEditText;
     private EditText modelEditText;
     private EditText periodEditText;
+    private EditText gdEditText;
+    private EditText cvfEditText;
+    private EditText cvEditText;
+    private EditText pkWEditText;
+    private EditText cylindersText;
+    private EditText ccEditText;
+
+    private ImageView advancedSearchButton;
+    private View advancedSearchGroup;
+    private boolean expanded;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +92,18 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         brandEditText = header.findViewById(R.id.brand_edit_text);
         modelEditText = header.findViewById(R.id.model_edit_text);
         periodEditText = header.findViewById(R.id.period_edit_text);
+        gdEditText = header.findViewById(R.id.gd_input_text);
+        cvEditText = header.findViewById(R.id.cv_input_text);
+        cvfEditText = header.findViewById(R.id.cvf_input_text);
+        pkWEditText = header.findViewById(R.id.pkw_input_text);
+        cylindersText = header.findViewById(R.id.cylinders_input_text);
+        ccEditText = header.findViewById(R.id.cc_input_text);
+
+        advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
+        advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
         brandEditText.requestFocus();
         header.findViewById(R.id.header_search_button).setOnClickListener(this);
+        advancedSearchButton.setOnClickListener(this);
     }
 
     @Override
@@ -92,8 +115,25 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     public void onClick(View v) {
         super.onClick(v);
         if( v.getId() == R.id.header_search_button ) {
+            if(expanded) {
+                switchAdvancedSearchOptions();
+            }
+            WindowUtils.hideSoftKeyboard( getActivity() );
             applyFilters();
+        } else if( v.getId() == R.id.header_advanced_search_action_button ) {
+            switchAdvancedSearchOptions();
         }
+    }
+
+    private void switchAdvancedSearchOptions() {
+        if( expanded ) {
+            advancedSearchButton.setImageResource(R.drawable.baseline_expand_more_black_18dp);
+            advancedSearchGroup.setVisibility(View.GONE);
+        } else {
+            advancedSearchButton.setImageResource(R.drawable.baseline_expand_less_black_18dp);
+            advancedSearchGroup.setVisibility(View.VISIBLE);
+        }
+        expanded = !expanded;
     }
 
     private boolean isInPeriod(String year, String period) {
@@ -123,12 +163,12 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
                 String brand = brandEditText.getText().toString();
                 String model = modelEditText.getText().toString();
                 String period = periodEditText.getText().toString();
-                String gd = "";
-                String cvf = "";
-                String cc = "";
-                String cylinders = "";
-                String cv = "";
-                String pKW = "";
+                String gd = gdEditText.getText().toString();
+                String cvf = cvfEditText.getText().toString();
+                String cc = ccEditText.getText().toString();
+                String cylinders = cylindersText.getText().toString();
+                String cv = cvEditText.getText().toString();
+                String pKW = pkWEditText.getText().toString();
 
                 for( data vehicle : vehicles ) {
                     if( vehicle.marca.toLowerCase().

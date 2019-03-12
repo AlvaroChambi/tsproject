@@ -19,6 +19,12 @@
     <string name="search_filter_brand_text">Marca</string>
     <string name="search_filter_model_text">Modelo</string>
     <string name="search_filter_year_text">Año</string>
+    <string name="search_filter_gd_text">g/d</string>
+    <string name="search_filter_cvf_text">cvf</string>
+    <string name="search_filter_cv_text">cv</string>
+    <string name="search_filter_pkw_text">pkW</string>
+    <string name="search_filter_cylinders_text">Nº cilindros</string>
+    <string name="search_filter_cc_text">cc</string>
 
     <string name="search_action_button">Buscar</string>
 </resources>

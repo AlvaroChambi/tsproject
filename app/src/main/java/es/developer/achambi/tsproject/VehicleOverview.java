@@ -31,7 +31,12 @@ public class VehicleOverview {
         }
         try{
             int elapsedTime = Calendar.getInstance().get( Calendar.YEAR ) - Integer.valueOf( year );
-            Depreciation depreciation = Depreciation.values()[elapsedTime];
+            Depreciation depreciation;
+            if( elapsedTime >= Depreciation.values().length ) {
+                depreciation = Depreciation.MORE_THAN_TWELVE_YEARS;
+            } else {
+                depreciation = Depreciation.values()[elapsedTime];
+            }
             depreciationValue = Integer.valueOf( vehicle.valor )
                     * depreciation.getDepreciationPercent();
             percentIncreaseValue = depreciationValue * TAX_PERCENT_INCREASE;

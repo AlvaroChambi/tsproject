@@ -18,7 +18,7 @@ android:
 install:
 - true
 script:
-- "./gradlew assembleDebug --scan -s"
+- "./gradlew assembleRelease --scan -s"
 deploy:
   provider: releases
   api_key:

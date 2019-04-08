@@ -11,10 +11,10 @@
     <string name="vehicle_value_label">%1$s€</string>
     <string name="vehicle_percent_label">%</string>
 
-    <string name="vehicle_value_details_description">El valor final mostrado se calcula tomando el valor base y aplicando la depreciación y los impuestos de la Comunidad de Madrid (4%)</string>
+    <string name="vehicle_value_details_description">El valor final se calcula teniendo en cuenta la depreciación del vehiculo y los impuestos de la Comunidad de Madrid (4%)</string>
     <string name="vehicle_value_details_depreciation">Valor aplicando la depreciación para vehiculo del año %1$s:</string>
     <string name="vehicle_value_details_base_value">Valor base:</string>
-    <string name="vehicle_value_details_increment">Valor aplicando impuestos: </string>
+    <string name="vehicle_value_details_increment">Total impuestos: </string>
 
     <string name="search_filter_brand_text">Marca</string>
     <string name="search_filter_model_text">Modelo</string>

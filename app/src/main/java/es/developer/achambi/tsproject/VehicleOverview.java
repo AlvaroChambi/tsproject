@@ -6,7 +6,7 @@ import es.developer.achambi.tsproject.model.data;
 
 public class VehicleOverview {
     public static int TAX_VALUE = 4;
-    private static final float TAX_PERCENT_INCREASE = 0.004f;
+    private static final float TAX_PERCENT_INCREASE = 0.04f;
     private data vehicle;
     private String year;
     private Float depreciationValue;

@@ -12,10 +12,18 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="8dp">
+        android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/details_type_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
         <TextView
             android:id="@+id/details_name_text"
             android:layout_width="wrap_content"
@@ -43,6 +51,7 @@
             android:text="@{item.model}"
             android:textColor="@color/text_primary"
             android:textSize="18sp"
+            android:paddingBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/details_name_text"
@@ -52,26 +61,26 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
             android:text="@string/details_gd_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/details_gd_text"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintStart_toEndOf="@+id/details_period_text"
+            app:layout_constraintTop_toBottomOf="@+id/details_type_text" />
 
         <TextView
             android:id="@+id/details_gd_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:text="@{item.gd}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView9"
-            app:layout_constraintEnd_toStartOf="@+id/textView11"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView9"
             app:layout_constraintTop_toTopOf="@+id/textView9"
             tools:text="diesel" />
@@ -80,83 +89,78 @@
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/details_cvf_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/details_cvf_text"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/details_gd_text"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cylinders_tag" />
 
         <TextView
             android:id="@+id/details_cvf_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:text="@{item.cvf}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView11"
-            app:layout_constraintEnd_toStartOf="@+id/textView13"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toTopOf="@+id/textView11"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="12,96" />
 
         <TextView
             android:id="@+id/textView13"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
             android:text="@string/details_cv_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/details_cv_text"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="@+id/details_cvf_text"
             app:layout_constraintStart_toEndOf="@+id/details_cvf_text"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintTop_toTopOf="@+id/details_cvf_text" />
 
         <TextView
             android:id="@+id/details_cv_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:text="@{item.cv}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView13"
-            app:layout_constraintEnd_toStartOf="@+id/textView15"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toTopOf="@+id/textView13"
+            app:layout_constraintVertical_bias="0.0"
             tools:text="110" />
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
             android:text="@string/details_pkw_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/details_pkw_text"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="@+id/details_cv_text"
             app:layout_constraintStart_toEndOf="@+id/details_cv_text"
-            app:layout_constraintTop_toBottomOf="@+id/details_period_text" />
+            app:layout_constraintTop_toTopOf="@+id/details_cv_text" />
 
         <TextView
             android:id="@+id/details_pkw_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@{item.pkW}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView15"
-            app:layout_constraintEnd_toStartOf="@+id/details_cc_tag"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView15"
             app:layout_constraintTop_toTopOf="@+id/textView15"
+            app:layout_constraintVertical_bias="1.0"
             tools:text="90" />
 
         <TextView
@@ -164,9 +168,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/details_period_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/details_period_text"
             app:layout_constraintHorizontal_bias="0.5"
@@ -179,13 +183,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="@string/search_filter_cylinders_text"
-            android:textColor="@color/text_primary"
+            android:text="@string/details_cylinders_label"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/cylinders_text"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/details_period_text"
-            app:layout_constraintTop_toBottomOf="@+id/details_type_text" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
         <TextView
             android:id="@+id/details_period_text"
@@ -193,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="@{item.period}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/textView17"
             app:layout_constraintStart_toEndOf="@+id/textView17"
             app:layout_constraintTop_toTopOf="@+id/textView17"
@@ -204,27 +206,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@{item.cylinders}"
-            android:textColor="@color/text_primary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            android:textColor="@color/text_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/cylinders_tag"
             app:layout_constraintStart_toEndOf="@+id/cylinders_tag"
-            app:layout_constraintTop_toTopOf="@+id/textView17"
+            app:layout_constraintTop_toTopOf="@+id/cylinders_tag"
             tools:text="4" />
 
         <TextView
             android:id="@+id/details_cc_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/details_cc_label"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/details_cc_text"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/details_pkw_text"
+            app:layout_constraintStart_toEndOf="@+id/cylinders_text"
             app:layout_constraintTop_toBottomOf="@+id/details_period_text"
             tools:text="cc" />
 
@@ -232,15 +230,37 @@
             android:id="@+id/details_cc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@{item.cc}"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_gray"
             app:layout_constraintBottom_toBottomOf="@+id/details_cc_tag"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/details_cc_tag"
             app:layout_constraintTop_toTopOf="@+id/details_cc_tag"
             tools:text="4" />
 
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/text_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <es.developer.achambi.tsproject.ValueDetailsView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3" />
     </android.support.constraint.ConstraintLayout>
 </layout>

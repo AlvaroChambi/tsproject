@@ -27,4 +27,8 @@
     <string name="search_filter_cc_text">cc</string>
 
     <string name="search_action_button">Buscar</string>
+
+    <string name="brand_hint_value">Opel</string>
+    <string name="model_hint_value">Corsa</string>
+    <string name="commercial_year_hint_value">2010</string>
 </resources>

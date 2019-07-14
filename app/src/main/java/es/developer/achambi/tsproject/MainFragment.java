@@ -1,19 +1,15 @@
 package es.developer.achambi.tsproject;
 
-import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -22,14 +18,11 @@ import es.developer.achambi.coreframework.threading.MainExecutor;
 import es.developer.achambi.coreframework.threading.Request;
 import es.developer.achambi.coreframework.threading.Response;
 import es.developer.achambi.coreframework.threading.ResponseHandler;
-import es.developer.achambi.coreframework.ui.QuickDetailPopup;
 import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 import es.developer.achambi.tsproject.model.data;
-
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
 public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
         SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
@@ -100,12 +93,19 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         pkWEditText = header.findViewById(R.id.pkw_input_text);
         cylindersText = header.findViewById(R.id.cylinders_input_text);
         ccEditText = header.findViewById(R.id.cc_input_text);
+        prefillFields();
 
         advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
         advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
         brandEditText.requestFocus();
         header.findViewById(R.id.header_search_button).setOnClickListener(this);
         advancedSearchButton.setOnClickListener(this);
+    }
+
+    private void prefillFields() {
+        brandEditText.setText(R.string.brand_hint_value);
+        modelEditText.setText(R.string.model_hint_value);
+        periodEditText.setText(R.string.commercial_year_hint_value);
     }
 
     @Override

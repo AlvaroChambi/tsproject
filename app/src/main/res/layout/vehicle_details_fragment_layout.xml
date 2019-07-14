@@ -58,17 +58,29 @@
             tools:text="Insignia 2.0CDTI Cosmo Aut. 4p/5p" />
 
         <TextView
+            android:id="@+id/textView14"
+            style="@style/quick_detail_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/text_gray"
+            android:padding="8dp"
+            android:text="@string/vehicle_value_details_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/details_type_text" />
+
+        <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
             android:text="@string/details_gd_label"
             android:textColor="@color/text_gray"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/details_period_text"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@+id/details_period_text"
-            app:layout_constraintTop_toBottomOf="@+id/details_type_text" />
+            app:layout_constraintTop_toTopOf="@+id/details_period_text" />
 
         <TextView
             android:id="@+id/details_gd_text"
@@ -89,12 +101,11 @@
             android:id="@+id/textView11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/details_cvf_label"
             android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/cylinders_tag"
             app:layout_constraintTop_toBottomOf="@+id/cylinders_tag" />
 
         <TextView
@@ -167,26 +178,25 @@
             android:id="@+id/textView17"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/details_period_label"
             android:textColor="@color/text_gray"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/details_period_text"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_type_text" />
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <TextView
             android:id="@+id/cylinders_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/details_cylinders_label"
             android:textColor="@color/text_gray"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/textView17"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
         <TextView
@@ -254,13 +264,17 @@
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
         <es.developer.achambi.tsproject.ValueDetailsView
+            android:id="@+id/value_details_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view3" />
+            app:layout_constraintTop_toBottomOf="@+id/view3"
+            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 </layout>

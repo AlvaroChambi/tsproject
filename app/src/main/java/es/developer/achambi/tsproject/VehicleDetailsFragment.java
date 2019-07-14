@@ -11,9 +11,10 @@ import es.developer.achambi.coreframework.ui.BaseDialogFragment;
 public class VehicleDetailsFragment extends BaseDialogFragment {
     private static final String VEHICLE_KEY = "VEHICLE_KEY";
 
-    private VehiclePresentation presentation;
+    private VehicleOverviewPresentation presentation;
+    private ValueDetailsView valueDetailsView;
 
-    public static VehicleDetailsFragment newInstance(VehiclePresentation vehiclePresentation) {
+    public static VehicleDetailsFragment newInstance(VehicleOverviewPresentation vehiclePresentation) {
         Bundle args = new Bundle();
         args.putParcelable(VEHICLE_KEY, vehiclePresentation);
         VehicleDetailsFragment fragment = new VehicleDetailsFragment();
@@ -35,6 +36,8 @@ public class VehicleDetailsFragment extends BaseDialogFragment {
     @Override
     public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
         VehicleDetailsFragmentLayoutBinding binding = DataBindingUtil.bind(view);
-        binding.setItem( presentation );
+        valueDetailsView = view.findViewById(R.id.value_details_view);
+        binding.setItem( presentation.vehicle );
+        valueDetailsView.displayDetails(presentation);
     }
 }

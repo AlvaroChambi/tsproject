@@ -1,6 +1,8 @@
 package es.developer.achambi.tsproject;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 
 import java.math.BigDecimal;
@@ -8,7 +10,7 @@ import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.ui.presentation.SearchListData;
 
-public class VehicleOverviewPresentation implements SearchListData {
+public class VehicleOverviewPresentation implements SearchListData, Parcelable {
     private static final int VALUE_DECIMAL_PLACE = 2;
     public final VehiclePresentation vehicle;
     public final String percent;
@@ -26,6 +28,26 @@ public class VehicleOverviewPresentation implements SearchListData {
         this.percentIncreaseValue = percentIncreaseValue;
     }
 
+    protected VehicleOverviewPresentation(Parcel in) {
+        vehicle = in.readParcelable(VehiclePresentation.class.getClassLoader());
+        percent = in.readString();
+        year = in.readString();
+        depreciationValue = in.readString();
+        percentIncreaseValue = in.readString();
+    }
+
+    public static final Creator<VehicleOverviewPresentation> CREATOR = new Creator<VehicleOverviewPresentation>() {
+        @Override
+        public VehicleOverviewPresentation createFromParcel(Parcel in) {
+            return new VehicleOverviewPresentation(in);
+        }
+
+        @Override
+        public VehicleOverviewPresentation[] newArray(int size) {
+            return new VehicleOverviewPresentation[size];
+        }
+    };
+
     @Override
     public int getViewType() {
         return 0;
@@ -34,6 +56,20 @@ public class VehicleOverviewPresentation implements SearchListData {
     @Override
     public long getId() {
         return vehicle.getId();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(vehicle, flags);
+        dest.writeString(percent);
+        dest.writeString(year);
+        dest.writeString(depreciationValue);
+        dest.writeString(percentIncreaseValue);
     }
 
     public static class Builder {

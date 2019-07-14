@@ -31,7 +31,8 @@ import es.developer.achambi.tsproject.model.data;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 
-public class MainFragment extends BaseSearchListFragment implements View.OnClickListener{
+public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
+        SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
     private Adapter adapter;
     private AppDatabase database;
     private MainExecutor executor;
@@ -61,6 +62,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     @Override
     public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
         super.onViewSetup(view, savedInstanceState);
+        adapter.setListener(this);
     }
 
     private ArrayList<VehicleOverview> buildVehicles( ArrayList<data> dataList, String year ) {
@@ -236,26 +238,12 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         return cvf;
     }
 
-    private void onVehicleItemClicked(VehicleOverviewPresentation item) {
+    @Override
+    public void onItemClicked(VehicleOverviewPresentation item) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         VehicleDetailsFragment detailsFragment =
-                VehicleDetailsFragment.newInstance( item.vehicle );
+                VehicleDetailsFragment.newInstance( item );
         detailsFragment.show( transaction, "" );
-    }
-
-    private void onVehicleValueClicked(VehicleOverviewPresentation item, View view) {
-        @SuppressLint("InflateParams") View detailsView =  LayoutInflater.from(getActivity())
-                .inflate( R.layout.value_quick_details_layout, null );
-        TextView baseValue = detailsView.findViewById(R.id.values_details_base_value_text);
-        TextView depreciationText = detailsView.findViewById(R.id.values_details_depreciation_year_text);
-        TextView depreciationValue = detailsView.findViewById(R.id.values_details_depreciation_value_text);
-        TextView taxIncrease = detailsView.findViewById(R.id.values_details_taxes_increase_value);
-        baseValue.setText( item.vehicle.value );
-        depreciationText.setText( getResources()
-                .getString( R.string.vehicle_value_details_depreciation, item.year ) );
-        depreciationValue.setText( item.depreciationValue );
-        taxIncrease.setText( item.percentIncreaseValue );
-        QuickDetailPopup.displayDetails( detailsView, view );
     }
 
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {
@@ -269,29 +257,6 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         public ViewHolder createViewHolder(View rootView) {
             ModelResultItemBinding binding = DataBindingUtil.bind(rootView);
             return new ViewHolder(binding);
-        }
-
-        @Override
-        protected void registerListeners(final ViewHolder viewHolder,
-                                         final SortedList<VehicleOverviewPresentation> data) {
-            viewHolder.itemView.findViewById(R.id.view).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = viewHolder.getAdapterPosition();
-                    if( position != NO_POSITION ) {
-                        onVehicleValueClicked( data.get( position ), v );
-                    }
-                }
-            });
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = viewHolder.getAdapterPosition();
-                    if( position != NO_POSITION ) {
-                        onVehicleItemClicked( data.get( position ) );
-                    }
-                }
-            });
         }
 
         @Override

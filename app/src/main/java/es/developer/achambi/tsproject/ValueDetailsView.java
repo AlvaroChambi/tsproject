@@ -36,7 +36,7 @@ public class ValueDetailsView extends ConstraintLayout {
         taxIncrease = findViewById(R.id.values_details_taxes_increase_value);
     }
 
-    private void displayDetails(VehicleOverviewPresentation item) {
+    public void displayDetails(VehicleOverviewPresentation item) {
         baseValue.setText( item.vehicle.value );
         depreciationText.setText( getResources()
                 .getString( R.string.vehicle_value_details_depreciation, item.year ) );

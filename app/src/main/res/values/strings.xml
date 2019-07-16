@@ -31,4 +31,6 @@
     <string name="brand_hint_value">Opel</string>
     <string name="model_hint_value">Corsa</string>
     <string name="commercial_year_hint_value">2010</string>
+
+    <string name="about_activity_title">Sobre Tasaciones</string>
 </resources>

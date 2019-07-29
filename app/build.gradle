@@ -55,9 +55,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':coreframework')
 
-    implementation 'com.google.firebase:firebase-auth:16.1.0'
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
-    implementation 'com.google.firebase:firebase-database:16.0.5'
     kapt "android.arch.persistence.room:compiler:1.1.1"
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,4 +1,5 @@
 language: android
+dist: trusty
 before_install:
 - openssl aes-256-cbc -K $encrypted_4283994a9293_key -iv $encrypted_4283994a9293_iv
   -in keystore.jks.enc -out keystore.jks -d

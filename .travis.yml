@@ -8,14 +8,12 @@ before_install:
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
 - echo yes | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+- echo yes | sdkmanager "platforms;android-28"
+- echo yes | sdkmanager "build-tools;28.0.3"
 android:
-  components:
-  - android-28
   licenses:
   - android-sdk-license-.+
   - ".+"
-install:
-- true
 script:
 - "./gradlew assembleRelease --scan -s"
 deploy:

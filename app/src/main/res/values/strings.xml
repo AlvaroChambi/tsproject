@@ -34,7 +34,7 @@
 
     <string name="about_activity_title">Sobre Tasaciones</string>
 
-    <string name="info_screen_description_text">Esta app tiene un uso meramente informativo No nos hacemos responsables de su uso.\nLos datos proviene del BOE publicado el lunes 24 de diciembre del 2018.\nEl tipo impositivo es el establecido por la Comunidad de Madrid conforme con el model 620.\nEl modelo 620 debe liquidarse por el precio de compra excepto si este es inferior a la valoración mínima establecida por hacienda, en cuyo caso se debe liquidar por el valor mínimo.\nSi tiene alguna duda sobre el impuesto o quiere realizar el cambio de titularidad de un vehículo no dude en ponerse en contacto con la Gestoría Afines donde se le podrá asesorar sobre todo el proceso.
+    <string name="info_screen_description_text">Esta app tiene un uso meramente informativo, no nos hacemos responsables de su uso.\nLos datos proviene del BOE publicado el lunes 24 de diciembre del 2018.\nEl tipo impositivo es el establecido por la Comunidad de Madrid conforme con el model 620.\nEl modelo 620 debe liquidarse por el precio de compra excepto si este es inferior a la valoración mínima establecida por hacienda, en cuyo caso se debe liquidar por el valor mínimo.\nSi tiene alguna duda sobre el impuesto o quiere realizar el cambio de titularidad de un vehículo no dude en ponerse en contacto con la Gestoría Afines donde se le podrá asesorar sobre todo el proceso.
     </string>
 
     <string name="gestoria_afines_phone_text">Gestoría Afines: %1$s</string>

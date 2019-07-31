@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
@@ -49,7 +51,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = AppDatabase.buildDatabase(getActivity());
-        executor = MainExecutor.buildExecutor();
+        executor = MainExecutor.Companion.buildExecutor();
     }
 
     @Override
@@ -157,63 +159,64 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     private void applyFilters() {
         startLoading();
 
-        executor.executeRequest(new Request<ArrayList<VehicleOverviewPresentation>>() {
-            @Override
-            public Response<ArrayList<VehicleOverviewPresentation>> perform() throws Exception {
-                vehicles = new ArrayList<>( database.getRowDao().queryAll() );
-                ArrayList<data> filtered = new ArrayList<>();
-                String brand = brandEditText.getText().toString();
-                String model = modelEditText.getText().toString();
-                String period = periodEditText.getText().toString();
-                String gd = gdEditText.getText().toString();
-                String cvf = cvfEditText.getText().toString();
-                String cc = ccEditText.getText().toString();
-                String cylinders = cylindersText.getText().toString();
-                String cv = cvEditText.getText().toString();
-                String pKW = pkWEditText.getText().toString();
+        executor.executeRequest(
+                this::getVehicles,
+                new ResponseHandler<ArrayList<VehicleOverviewPresentation>>() {
 
-                for( data vehicle : vehicles ) {
-                    if( validateData(vehicle) &&
-                            vehicle.marca.toLowerCase().
-                            contains( brand.toLowerCase() ) &&
-                            vehicle.modelo.toLowerCase().
-                                    contains( model.toLowerCase() ) &&
-                            vehicle.gD.toLowerCase().
-                                    contains( gd.toLowerCase() ) &&
-                            vehicle.cvf.toLowerCase().
-                                    contains( formatValue(cvf).toLowerCase() ) &&
-                            vehicle.cc.toLowerCase().
-                                    contains( cc.toLowerCase() ) &&
-                            isInPeriod( period, vehicle.periodo ) &&
-                            vehicle.cilindros.toLowerCase()
-                                    .contains( cylinders.toLowerCase() ) &&
-                            vehicle.cv.toLowerCase()
-                                    .contains( cv.toLowerCase() ) &&
-                            vehicle.potencia.toLowerCase()
-                                    .contains( pKW.toLowerCase() ) ) {
-                        filtered.add( vehicle );
-                    }
-                }
-
-                ArrayList<VehicleOverview> vehicles = buildVehicles(
-                        filtered, periodEditText.getText().toString() );
-                return new Response<>( VehicleOverviewPresentation.Builder
-                        .build( getActivity(), vehicles ) );
-            }
-        }, new ResponseHandler<ArrayList<VehicleOverviewPresentation>>() {
             @Override
-            public void onSuccess(Response<ArrayList<VehicleOverviewPresentation>> response) {
+            public void onSuccess(ArrayList<VehicleOverviewPresentation> response) {
                 hideLoading();
-                adapter.setData( response.getData() );
+                adapter.setData( response );
                 presentAdapterData();
             }
 
             @Override
             public void onError(Error error) {
-                super.onError(error);
                 showError(error);
             }
         });
+    }
+
+    private ArrayList<VehicleOverviewPresentation> getVehicles() {
+        vehicles = new ArrayList<>( database.getRowDao().queryAll() );
+        ArrayList<data> filtered = new ArrayList<>();
+        String brand = brandEditText.getText().toString();
+        String model = modelEditText.getText().toString();
+        String period = periodEditText.getText().toString();
+        String gd = gdEditText.getText().toString();
+        String cvf = cvfEditText.getText().toString();
+        String cc = ccEditText.getText().toString();
+        String cylinders = cylindersText.getText().toString();
+        String cv = cvEditText.getText().toString();
+        String pKW = pkWEditText.getText().toString();
+
+        for( data vehicle : vehicles ) {
+            if( validateData(vehicle) &&
+                    vehicle.marca.toLowerCase().
+                            contains( brand.toLowerCase() ) &&
+                    vehicle.modelo.toLowerCase().
+                            contains( model.toLowerCase() ) &&
+                    vehicle.gD.toLowerCase().
+                            contains( gd.toLowerCase() ) &&
+                    vehicle.cvf.toLowerCase().
+                            contains( formatValue(cvf).toLowerCase() ) &&
+                    vehicle.cc.toLowerCase().
+                            contains( cc.toLowerCase() ) &&
+                    isInPeriod( period, vehicle.periodo ) &&
+                    vehicle.cilindros.toLowerCase()
+                            .contains( cylinders.toLowerCase() ) &&
+                    vehicle.cv.toLowerCase()
+                            .contains( cv.toLowerCase() ) &&
+                    vehicle.potencia.toLowerCase()
+                            .contains( pKW.toLowerCase() ) ) {
+                filtered.add( vehicle );
+            }
+        }
+
+        ArrayList<VehicleOverview> vehicles = buildVehicles(
+                filtered, periodEditText.getText().toString() );
+        return VehicleOverviewPresentation.Builder
+                .build( getActivity(), vehicles );
     }
 
     private boolean validateData( data data ) {

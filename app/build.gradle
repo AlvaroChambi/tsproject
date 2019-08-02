@@ -29,7 +29,7 @@ android {
     }
 
     dataBinding {
-        enabled = true;
+        enabled = true
     }
 
     buildTypes {
@@ -47,6 +47,11 @@ android {
         signingConfigs.release.storePassword = System.getenv("keystore_password")
         signingConfigs.release.keyAlias = System.getenv("keystore_alias")
         signingConfigs.release.keyPassword = System.getenv("keystore_alias_password")
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

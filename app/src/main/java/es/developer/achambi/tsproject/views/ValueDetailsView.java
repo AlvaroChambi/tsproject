@@ -1,10 +1,13 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.views;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
+
+import es.developer.achambi.tsproject.R;
+import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
 
 public class ValueDetailsView extends ConstraintLayout {
     private TextView baseValue;

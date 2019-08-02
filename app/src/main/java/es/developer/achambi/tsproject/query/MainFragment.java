@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.query;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -18,10 +18,16 @@ import es.developer.achambi.coreframework.threading.Error;
 import es.developer.achambi.coreframework.threading.MainExecutor;
 import es.developer.achambi.coreframework.threading.ResponseHandler;
 import es.developer.achambi.coreframework.utils.WindowUtils;
+import es.developer.achambi.tsproject.about.InfoActivity;
+import es.developer.achambi.tsproject.R;
+import es.developer.achambi.tsproject.details.VehicleDetailsFragment;
+import es.developer.achambi.tsproject.models.VehicleOverview;
+import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
+import es.developer.achambi.tsproject.database.AppDatabase;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
-import es.developer.achambi.tsproject.model.data;
+import es.developer.achambi.tsproject.database.model.data;
 
 public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
         SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
@@ -57,7 +63,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         adapter.setListener(this);
     }
 
-    private ArrayList<VehicleOverview> buildVehicles( ArrayList<data> dataList, String year ) {
+    private ArrayList<VehicleOverview> buildVehicles(ArrayList<data> dataList, String year ) {
         ArrayList<VehicleOverview> vehicleOverviews = new ArrayList<>();
         for( data item : dataList ) {
             VehicleOverview vehicle = new VehicleOverview();
@@ -240,6 +246,7 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         }
         return false;
     }
+
 
     private String formatValue( String cvf ) {
         if( cvf.contains(".") ) {

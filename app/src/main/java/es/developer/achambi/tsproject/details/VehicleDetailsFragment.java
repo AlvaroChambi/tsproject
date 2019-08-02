@@ -1,12 +1,16 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.details;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+
+import es.developer.achambi.tsproject.R;
+import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
 import es.developer.achambi.tsproject.databinding.VehicleDetailsFragmentLayoutBinding;
 
 import es.developer.achambi.coreframework.ui.BaseDialogFragment;
+import es.developer.achambi.tsproject.views.ValueDetailsView;
 
 public class VehicleDetailsFragment extends BaseDialogFragment {
     private static final String VEHICLE_KEY = "VEHICLE_KEY";

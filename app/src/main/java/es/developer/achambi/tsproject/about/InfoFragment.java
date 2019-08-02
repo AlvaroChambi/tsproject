@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.about;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import es.developer.achambi.coreframework.ui.BaseFragment;
+import es.developer.achambi.tsproject.R;
 
 public class InfoFragment extends BaseFragment {
     public static InfoFragment newInstance() {

@@ -12,14 +12,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
 import es.developer.achambi.coreframework.threading.MainExecutor;
-import es.developer.achambi.coreframework.threading.Request;
-import es.developer.achambi.coreframework.threading.Response;
 import es.developer.achambi.coreframework.threading.ResponseHandler;
 import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;

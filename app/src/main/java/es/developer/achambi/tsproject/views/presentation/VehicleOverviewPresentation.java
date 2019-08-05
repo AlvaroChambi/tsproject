@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.views.presentation;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.ui.presentation.SearchListData;
+import es.developer.achambi.tsproject.R;
+import es.developer.achambi.tsproject.models.VehicleOverview;
 
 public class VehicleOverviewPresentation implements SearchListData, Parcelable {
     private static final int VALUE_DECIMAL_PLACE = 2;

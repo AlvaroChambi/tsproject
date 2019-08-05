@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="item"
-            type="es.developer.achambi.tsproject.VehicleOverviewPresentation">
+            type="es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation">
         </variable>
     </data>
     <android.support.v7.widget.CardView

@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject.model;
+package es.developer.achambi.tsproject.database.model;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;

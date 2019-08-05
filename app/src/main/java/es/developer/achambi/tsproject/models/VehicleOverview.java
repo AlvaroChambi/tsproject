@@ -1,8 +1,8 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.models;
 
 import java.util.Calendar;
 
-import es.developer.achambi.tsproject.model.data;
+import es.developer.achambi.tsproject.database.model.data;
 
 public class VehicleOverview {
     public static int TAX_VALUE = 4;

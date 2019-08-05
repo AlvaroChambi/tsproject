@@ -1,11 +1,12 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.views.presentation;
 
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import es.developer.achambi.coreframework.ui.presentation.SearchListData;
-import es.developer.achambi.tsproject.model.data;
+import es.developer.achambi.tsproject.R;
+import es.developer.achambi.tsproject.database.model.data;
 
 public class VehiclePresentation implements SearchListData, Parcelable {
     public final int id;

@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.about;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import es.developer.achambi.coreframework.ui.BaseActivity;
 import es.developer.achambi.coreframework.ui.BaseFragment;
+import es.developer.achambi.tsproject.R;
 
 public class InfoActivity extends BaseActivity {
     public static Intent getStartIntent(Context context) {

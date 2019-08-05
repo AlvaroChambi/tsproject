@@ -6,7 +6,7 @@
         <import type="android.view.View"/>
         <variable
             name="item"
-            type="es.developer.achambi.tsproject.VehiclePresentation">
+            type="es.developer.achambi.tsproject.views.presentation.VehiclePresentation">
         </variable>
     </data>
 
@@ -263,7 +263,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
-        <es.developer.achambi.tsproject.ValueDetailsView
+        <es.developer.achambi.tsproject.views.ValueDetailsView
             android:id="@+id/value_details_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

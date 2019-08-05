@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -6,8 +6,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import es.developer.achambi.coreframework.db.utils.DatabaseUtils;
-import es.developer.achambi.tsproject.model.RowDao;
-import es.developer.achambi.tsproject.model.data;
+import es.developer.achambi.tsproject.database.model.RowDao;
+import es.developer.achambi.tsproject.database.model.data;
 
 @Database(entities = {data.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {

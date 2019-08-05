@@ -1,4 +1,4 @@
-package es.developer.achambi.tsproject;
+package es.developer.achambi.tsproject.models;
 
 public enum Depreciation {
     UNTIL_ONE_YEAR( 1.0f ),

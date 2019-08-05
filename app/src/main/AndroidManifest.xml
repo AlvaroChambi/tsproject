@@ -12,7 +12,7 @@
         android:name=".TSApplication"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".query.MainActivity">
+            android:name=".query.QueryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

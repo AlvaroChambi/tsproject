@@ -6,12 +6,11 @@ import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.models.VehicleOverview
 
 class VehiclesUseCase( private val database: AppDatabase ) {
-    private val vehicles = ArrayList<VehicleOverview>()
-
     fun retrieveVehicles( queryParams: QueryParams ) : ArrayList<VehicleOverview> {
+        val vehicles = ArrayList<VehicleOverview>()
         val rawVehicles = database.rowDao.queryAll()
         val filtered = applyFilters( rawVehicles, queryParams )
-        filtered.forEach() {
+        filtered.forEach {
             val vehicle = VehicleOverview()
             vehicle.vehicle = it
             vehicle.year = queryParams.period

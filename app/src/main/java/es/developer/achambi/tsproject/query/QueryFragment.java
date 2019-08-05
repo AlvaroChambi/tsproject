@@ -2,6 +2,7 @@ package es.developer.achambi.tsproject.query;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -12,29 +13,27 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
-import es.developer.achambi.coreframework.threading.MainExecutor;
-import es.developer.achambi.coreframework.threading.ResponseHandler;
 import es.developer.achambi.coreframework.utils.WindowUtils;
+import es.developer.achambi.tsproject.TSApplication;
 import es.developer.achambi.tsproject.about.InfoActivity;
 import es.developer.achambi.tsproject.R;
 import es.developer.achambi.tsproject.details.VehicleDetailsFragment;
+import es.developer.achambi.tsproject.models.QueryParams;
 import es.developer.achambi.tsproject.models.VehicleOverview;
 import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
-import es.developer.achambi.tsproject.database.AppDatabase;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
-import es.developer.achambi.tsproject.database.model.data;
 
-public class MainFragment extends BaseSearchListFragment implements View.OnClickListener,
-        SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation> {
+public class QueryFragment extends BaseSearchListFragment implements View.OnClickListener,
+        SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation>,
+        QueryScreenInterface {
     private Adapter adapter;
-    private AppDatabase database;
-    private MainExecutor executor;
-    private ArrayList<data> vehicles;
 
     private EditText brandEditText;
     private EditText modelEditText;
@@ -50,28 +49,19 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
     private View advancedSearchGroup;
     private boolean expanded;
 
+    private QueryPresenter presenter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = AppDatabase.buildDatabase(getActivity());
-        executor = MainExecutor.Companion.buildExecutor();
+        presenter = TSApplication.Companion.getQueryPresenterFactory()
+                .createPresenter(this, getLifecycle());
     }
 
     @Override
     public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
         super.onViewSetup(view, savedInstanceState);
         adapter.setListener(this);
-    }
-
-    private ArrayList<VehicleOverview> buildVehicles(ArrayList<data> dataList, String year ) {
-        ArrayList<VehicleOverview> vehicleOverviews = new ArrayList<>();
-        for( data item : dataList ) {
-            VehicleOverview vehicle = new VehicleOverview();
-            vehicle.setVehicle( item );
-            vehicle.setYear( year );
-            vehicleOverviews.add( vehicle );
-        }
-        return vehicleOverviews;
     }
 
     @Override
@@ -153,106 +143,20 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         expanded = !expanded;
     }
 
-    private boolean isInPeriod(String year, String period) {
-        if(year.isEmpty()) {
-            return true;
-        }
-        String firstYear = period.substring(0, period.lastIndexOf("-"));
-        String secondYear = period.substring(period.lastIndexOf("-") + 1, period.length());
-        if(secondYear.isEmpty()) {
-            return year.equals( firstYear );
-        } else {
-            int first = Integer.valueOf( firstYear );
-            int second = Integer.valueOf( secondYear );
-            int yearToFind = Integer.valueOf( year );
-            return first <= yearToFind && yearToFind <= second;
-        }
-    }
-
     private void applyFilters() {
-        startLoading();
-
-        executor.executeRequest(
-                this::getVehicles,
-                new ResponseHandler<ArrayList<VehicleOverviewPresentation>>() {
-
-            @Override
-            public void onSuccess(ArrayList<VehicleOverviewPresentation> response) {
-                hideLoading();
-                adapter.setData( response );
-                presentAdapterData();
-            }
-
-            @Override
-            public void onError(Error error) {
-                showError(error);
-            }
-        });
-    }
-
-    private ArrayList<VehicleOverviewPresentation> getVehicles() {
-        vehicles = new ArrayList<>( database.getRowDao().queryAll() );
-        ArrayList<data> filtered = new ArrayList<>();
-        String brand = brandEditText.getText().toString();
-        String model = modelEditText.getText().toString();
-        String period = periodEditText.getText().toString();
-        String gd = gdEditText.getText().toString();
-        String cvf = cvfEditText.getText().toString();
-        String cc = ccEditText.getText().toString();
-        String cylinders = cylindersText.getText().toString();
-        String cv = cvEditText.getText().toString();
-        String pKW = pkWEditText.getText().toString();
-
-        for( data vehicle : vehicles ) {
-            if( validateData(vehicle) &&
-                    vehicle.marca.toLowerCase().
-                            contains( brand.toLowerCase() ) &&
-                    vehicle.modelo.toLowerCase().
-                            contains( model.toLowerCase() ) &&
-                    vehicle.gD.toLowerCase().
-                            contains( gd.toLowerCase() ) &&
-                    vehicle.cvf.toLowerCase().
-                            contains( formatValue(cvf).toLowerCase() ) &&
-                    vehicle.cc.toLowerCase().
-                            contains( cc.toLowerCase() ) &&
-                    isInPeriod( period, vehicle.periodo ) &&
-                    vehicle.cilindros.toLowerCase()
-                            .contains( cylinders.toLowerCase() ) &&
-                    vehicle.cv.toLowerCase()
-                            .contains( cv.toLowerCase() ) &&
-                    vehicle.potencia.toLowerCase()
-                            .contains( pKW.toLowerCase() ) ) {
-                filtered.add( vehicle );
-            }
-        }
-
-        ArrayList<VehicleOverview> vehicles = buildVehicles(
-                filtered, periodEditText.getText().toString() );
-        return VehicleOverviewPresentation.Builder
-                .build( getActivity(), vehicles );
-    }
-
-    private boolean validateData( data data ) {
-        if( data.cilindros != null &&
-                data.potencia != null &&
-                data.cv != null &&
-                data.gD != null &&
-                data.periodo != null &&
-                data.marca != null &&
-                data.cc != null &&
-                data.cvf != null &&
-                data.valor != null ) {
-            return true;
-        }
-        return false;
-    }
-
-
-    private String formatValue( String cvf ) {
-        if( cvf.contains(".") ) {
-            return cvf.replace('.', ',');
-        }
-        return cvf;
+        QueryParams.Builder builder = new QueryParams.Builder();
+        presenter.queryVehicles( builder
+                .brand( brandEditText.getText().toString() )
+                .model( modelEditText.getText().toString() )
+                .period( periodEditText.getText().toString() )
+                .gd( gdEditText.getText().toString() )
+                .cvf( cvfEditText.getText().toString() )
+                .cc( ccEditText.getText().toString() )
+                .cylinders( cylindersText.getText().toString() )
+                .cv( cvEditText.getText().toString() )
+                .pkw( pkWEditText.getText().toString() )
+                .build()
+        );
     }
 
     @Override
@@ -260,7 +164,29 @@ public class MainFragment extends BaseSearchListFragment implements View.OnClick
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         VehicleDetailsFragment detailsFragment =
                 VehicleDetailsFragment.newInstance( item );
-        detailsFragment.show( transaction, "" );
+        detailsFragment.show( transaction, null );
+    }
+
+    @Override
+    public void showLoading() {
+        startLoading();
+    }
+
+    @Override
+    public void stopLoading() {
+        hideLoading();
+    }
+
+    @Override
+    public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles) {
+        adapter.setData( VehicleOverviewPresentation.Builder
+                .build( getActivity(), vehicles ) );
+        presentAdapterData();
+    }
+
+    @Override
+    public void displayError(@NonNull Error error) {
+        showError(error);
     }
 
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {

@@ -6,10 +6,13 @@ import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.models.VehicleOverview
 
 class VehiclesUseCase( private val database: AppDatabase ) {
+    private lateinit var rawData : List<data>
+
     fun retrieveVehicles( queryParams: QueryParams ) : ArrayList<VehicleOverview> {
         val vehicles = ArrayList<VehicleOverview>()
-        val rawVehicles = database.rowDao.queryAll()
-        val filtered = applyFilters( rawVehicles, queryParams )
+        rawData = fetchData()
+
+        val filtered = applyFilters( rawData, queryParams )
         filtered.forEach {
             val vehicle = VehicleOverview()
             vehicle.vehicle = it
@@ -18,6 +21,13 @@ class VehiclesUseCase( private val database: AppDatabase ) {
         }
 
         return vehicles
+    }
+
+    private fun fetchData() : List<data> {
+        if(::rawData.isInitialized) {
+            return rawData
+        }
+        return database.rowDao.queryAll()
     }
 
     private fun applyFilters( rawVehicles : List<data>, queryParams: QueryParams ) : ArrayList<data>{

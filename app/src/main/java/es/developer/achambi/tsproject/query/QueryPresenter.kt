@@ -18,14 +18,17 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
 
     fun queryVehicles(queryParams: QueryParams ) {
         screen.showLoading()
+        screen.disableSearchButton()
         val responseHandler = object: ResponseHandler<ArrayList<VehicleOverview>> {
             override fun onSuccess(response: ArrayList<VehicleOverview>) {
                 screen.stopLoading()
+                screen.enableSearchButton()
                 screen.displayVehicles(response)
             }
 
             override fun onError(error: Error) {
                 screen.stopLoading()
+                screen.enableSearchButton()
                 screen.displayError(error)
             }
         }

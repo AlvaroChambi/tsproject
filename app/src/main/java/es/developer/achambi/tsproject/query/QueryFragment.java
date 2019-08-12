@@ -33,6 +33,7 @@ import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 public class QueryFragment extends BaseSearchListFragment implements View.OnClickListener,
         SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation>,
         QueryScreenInterface {
+    private static final String LIST_SAVED_STATE = "LIST_SAVED_STATE";
     private Adapter adapter;
 
     private EditText brandEditText;
@@ -59,8 +60,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
-    public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewSetup(view, savedInstanceState);
+    public void onViewSetup(View view) {
+        super.onViewSetup(view);
         adapter.setListener(this);
     }
 
@@ -88,7 +89,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         pkWEditText = header.findViewById(R.id.pkw_input_text);
         cylindersText = header.findViewById(R.id.cylinders_input_text);
         ccEditText = header.findViewById(R.id.cc_input_text);
-        prefillFields();
 
         advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
         advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
@@ -97,10 +97,15 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         advancedSearchButton.setOnClickListener(this);
     }
 
-    private void prefillFields() {
-        brandEditText.setText(R.string.brand_hint_value);
-        modelEditText.setText(R.string.model_hint_value);
-        periodEditText.setText(R.string.commercial_year_hint_value);
+    @Override
+    public void onDataRequest() {
+        presenter.queryVehicles(applyFilters());
+    }
+
+    @Override
+    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+        adapter.setData( savedInstanceState.getParcelableArrayList(LIST_SAVED_STATE) );
+        presentAdapterData();
     }
 
     @Override
@@ -126,7 +131,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
                 switchAdvancedSearchOptions();
             }
             WindowUtils.hideSoftKeyboard( getActivity() );
-            applyFilters();
+
+            presenter.queryVehicles( applyFilters() );
         } else if( v.getId() == R.id.header_advanced_search_action_button ) {
             switchAdvancedSearchOptions();
         }
@@ -143,10 +149,9 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         expanded = !expanded;
     }
 
-    private void applyFilters() {
+    private QueryParams applyFilters() {
         QueryParams.Builder builder = new QueryParams.Builder();
-        presenter.queryVehicles( builder
-                .brand( brandEditText.getText().toString() )
+        return builder.brand( brandEditText.getText().toString() )
                 .model( modelEditText.getText().toString() )
                 .period( periodEditText.getText().toString() )
                 .gd( gdEditText.getText().toString() )
@@ -155,8 +160,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
                 .cylinders( cylindersText.getText().toString() )
                 .cv( cvEditText.getText().toString() )
                 .pkw( pkWEditText.getText().toString() )
-                .build()
-        );
+                .build();
     }
 
     @Override
@@ -178,6 +182,16 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
+    public void disableSearchButton() {
+        advancedSearchButton.setEnabled(false);
+    }
+
+    @Override
+    public void enableSearchButton() {
+        advancedSearchButton.setEnabled(true);
+    }
+
+    @Override
     public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles) {
         adapter.setData( VehicleOverviewPresentation.Builder
                 .build( getActivity(), vehicles ) );
@@ -187,6 +201,12 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public void displayError(@NonNull Error error) {
         showError(error);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(LIST_SAVED_STATE, adapter.getData());
     }
 
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {

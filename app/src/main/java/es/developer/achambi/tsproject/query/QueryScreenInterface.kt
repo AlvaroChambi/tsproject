@@ -7,6 +7,8 @@ import es.developer.achambi.tsproject.models.VehicleOverview
 interface QueryScreenInterface : Screen {
     fun showLoading()
     fun stopLoading()
+    fun disableSearchButton()
+    fun enableSearchButton()
     fun displayVehicles(vehicles: ArrayList<VehicleOverview> )
     fun displayError( error: Error )
 }

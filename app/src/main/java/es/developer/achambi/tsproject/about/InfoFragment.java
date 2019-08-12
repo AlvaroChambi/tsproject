@@ -2,10 +2,10 @@ package es.developer.achambi.tsproject.about;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
+
+import org.jetbrains.annotations.NotNull;
 
 import es.developer.achambi.coreframework.ui.BaseFragment;
 import es.developer.achambi.tsproject.R;
@@ -22,7 +22,7 @@ public class InfoFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewSetup(@NotNull View view) {
         view.findViewById(R.id.phone_call_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

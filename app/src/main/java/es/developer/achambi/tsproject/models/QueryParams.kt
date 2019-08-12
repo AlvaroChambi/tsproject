@@ -1,8 +1,5 @@
 package es.developer.achambi.tsproject.models
 
-import android.os.Parcel
-import android.os.Parcelable
-
 class QueryParams(
     val brand : String,
     val model : String,
@@ -12,19 +9,7 @@ class QueryParams(
     val cvf : String,
     val pkw : String,
     val cylinders : String,
-    val cc : String ) : Parcelable {
-
-    constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString()) {
-    }
+    val cc : String ) {
 
     data class Builder(
             var brand : String = "",
@@ -47,31 +32,5 @@ class QueryParams(
         fun cc( cc: String ) = apply { this.cc = cc }
 
         fun build() = QueryParams( brand, model, period, gd, cv, cvf, pkw, cylinders, cc )
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(brand)
-        parcel.writeString(model)
-        parcel.writeString(period)
-        parcel.writeString(gd)
-        parcel.writeString(cv)
-        parcel.writeString(cvf)
-        parcel.writeString(pkw)
-        parcel.writeString(cylinders)
-        parcel.writeString(cc)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<QueryParams> {
-        override fun createFromParcel(parcel: Parcel): QueryParams {
-            return QueryParams(parcel)
-        }
-
-        override fun newArray(size: Int): Array<QueryParams?> {
-            return arrayOfNulls(size)
-        }
     }
 }

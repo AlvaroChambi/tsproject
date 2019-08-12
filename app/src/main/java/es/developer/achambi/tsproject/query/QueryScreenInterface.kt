@@ -9,6 +9,9 @@ interface QueryScreenInterface : Screen {
     fun stopLoading()
     fun disableSearchButton()
     fun enableSearchButton()
+    fun expandAdvancedSearch()
+    fun collapseAdvancedSearch()
+    fun collapseKeyboard()
     fun displayVehicles(vehicles: ArrayList<VehicleOverview> )
     fun displayError( error: Error )
 }

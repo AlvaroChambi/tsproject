@@ -1,5 +1,6 @@
 package es.developer.achambi.tsproject.usecase
 
+import es.developer.achambi.coreframework.threading.Error
 import es.developer.achambi.tsproject.database.AppDatabase
 import es.developer.achambi.tsproject.database.model.data
 import es.developer.achambi.tsproject.models.QueryParams
@@ -8,6 +9,7 @@ import es.developer.achambi.tsproject.models.VehicleOverview
 class VehiclesUseCase( private val database: AppDatabase ) {
     private lateinit var rawData : List<data>
 
+    @Throws(Error::class)
     fun retrieveVehicles( queryParams: QueryParams ) : ArrayList<VehicleOverview> {
         val vehicles = ArrayList<VehicleOverview>()
         rawData = fetchData()

@@ -98,7 +98,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
-    public void onDataRequest() {
+    public void onDataSetup() {
         presenter.queryVehicles(applyFilters());
     }
 

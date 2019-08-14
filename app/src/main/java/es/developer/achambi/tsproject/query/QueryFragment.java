@@ -99,76 +99,26 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
 
     @Override
     public void onDataSetup() {
-        presenter.queryVehicles(applyFilters());
+        presenter.queryVehicles(buildFilters());
     }
 
     @Override
-    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
-        adapter.setData( savedInstanceState.getParcelableArrayList(LIST_SAVED_STATE) );
-        presentAdapterData();
+    public void expandAdvancedSearch() {
+        expanded = true;
+        advancedSearchButton.setImageResource(R.drawable.baseline_expand_less_black_18dp);
+        advancedSearchGroup.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.info_menu, menu);
+    public void collapseAdvancedSearch() {
+        expanded = false;
+        advancedSearchButton.setImageResource(R.drawable.baseline_expand_more_black_18dp);
+        advancedSearchGroup.setVisibility(View.GONE);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_info:
-                startActivity(InfoActivity.getStartIntent(getActivity()));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        if( v.getId() == R.id.header_search_button ) {
-            if(expanded) {
-                switchAdvancedSearchOptions();
-            }
-            WindowUtils.hideSoftKeyboard( getActivity() );
-
-            presenter.queryVehicles( applyFilters() );
-        } else if( v.getId() == R.id.header_advanced_search_action_button ) {
-            switchAdvancedSearchOptions();
-        }
-    }
-
-    private void switchAdvancedSearchOptions() {
-        if( expanded ) {
-            advancedSearchButton.setImageResource(R.drawable.baseline_expand_more_black_18dp);
-            advancedSearchGroup.setVisibility(View.GONE);
-        } else {
-            advancedSearchButton.setImageResource(R.drawable.baseline_expand_less_black_18dp);
-            advancedSearchGroup.setVisibility(View.VISIBLE);
-        }
-        expanded = !expanded;
-    }
-
-    private QueryParams applyFilters() {
-        QueryParams.Builder builder = new QueryParams.Builder();
-        return builder.brand( brandEditText.getText().toString() )
-                .model( modelEditText.getText().toString() )
-                .period( periodEditText.getText().toString() )
-                .gd( gdEditText.getText().toString() )
-                .cvf( cvfEditText.getText().toString() )
-                .cc( ccEditText.getText().toString() )
-                .cylinders( cylindersText.getText().toString() )
-                .cv( cvEditText.getText().toString() )
-                .pkw( pkWEditText.getText().toString() )
-                .build();
-    }
-
-    @Override
-    public void onItemClicked(VehicleOverviewPresentation item) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        VehicleDetailsFragment detailsFragment =
-                VehicleDetailsFragment.newInstance( item );
-        detailsFragment.show( transaction, null );
+    public void collapseKeyboard() {
+        WindowUtils.hideSoftKeyboard( getActivity() );
     }
 
     @Override
@@ -201,6 +151,59 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public void displayError(@NonNull Error error) {
         showError(error);
+    }
+
+    @Override
+    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+        adapter.setData( savedInstanceState.getParcelableArrayList(LIST_SAVED_STATE) );
+        presentAdapterData();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.info_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_info:
+                startActivity(InfoActivity.getStartIntent(getActivity()));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        if( v.getId() == R.id.header_search_button ) {
+            presenter.performSearchSelected(buildFilters(), expanded);
+        } else if( v.getId() == R.id.header_advanced_search_action_button ) {
+            presenter.switchAdvancedSearchSelected(expanded);
+        }
+    }
+
+    private QueryParams buildFilters() {
+        QueryParams.Builder builder = new QueryParams.Builder();
+        return builder.brand( brandEditText.getText().toString() )
+                .model( modelEditText.getText().toString() )
+                .period( periodEditText.getText().toString() )
+                .gd( gdEditText.getText().toString() )
+                .cvf( cvfEditText.getText().toString() )
+                .cc( ccEditText.getText().toString() )
+                .cylinders( cylindersText.getText().toString() )
+                .cv( cvEditText.getText().toString() )
+                .pkw( pkWEditText.getText().toString() )
+                .build();
+    }
+
+    @Override
+    public void onItemClicked(VehicleOverviewPresentation item) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        VehicleDetailsFragment detailsFragment =
+                VehicleDetailsFragment.newInstance( item );
+        detailsFragment.show( transaction, null );
     }
 
     @Override

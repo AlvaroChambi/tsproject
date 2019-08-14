@@ -32,6 +32,22 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         request(queryRequest(queryParams), responseHandler)
     }
 
+    fun performSearchSelected(queryParams: QueryParams, expanded: Boolean) {
+        if(expanded) {
+            screen.collapseAdvancedSearch()
+            screen.collapseKeyboard()
+        }
+        queryVehicles(queryParams)
+    }
+
+    fun switchAdvancedSearchSelected(expanded: Boolean) {
+        if( expanded ) {
+            screen.collapseAdvancedSearch()
+        } else {
+            screen.expandAdvancedSearch()
+        }
+    }
+
     private fun queryRequest(queryParams: QueryParams) : Request<ArrayList<VehicleOverview>>  {
         return object: Request<ArrayList<VehicleOverview>> {
             override fun perform(): ArrayList<VehicleOverview> {

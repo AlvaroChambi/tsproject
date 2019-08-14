@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_filter_year_text"
+            android:text="@string/commercial_year_hint_value"
             android:inputType="number"
             android:maxLines="1"
             android:textColor="@color/text_secondary"
@@ -51,6 +52,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:hint="@string/search_filter_model_text"
+            android:text="@string/model_hint_value"
             android:textColor="@color/text_secondary"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
@@ -77,6 +79,7 @@
             android:maxLines="1"
             android:hint="@string/search_filter_brand_text"
             android:textColor="@color/text_secondary"
+            android:text="@string/brand_hint_value"
             android:textSize="12sp" />
     </android.support.design.widget.TextInputLayout>
 

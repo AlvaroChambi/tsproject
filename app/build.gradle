@@ -60,7 +60,8 @@ dependencies {
     implementation project(':coreframework')
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.6.3'
+    testImplementation 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'org.mockito:mockito-inline:2.8.47'
 
     kapt "android.arch.persistence.room:compiler:1.1.1"
 }

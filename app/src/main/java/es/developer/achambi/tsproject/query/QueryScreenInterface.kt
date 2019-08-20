@@ -15,4 +15,5 @@ interface QueryScreenInterface : Screen {
     fun collapseKeyboard()
     fun displayVehicles( vehicles: ArrayList<VehicleOverview>, paginatedData : ArrayList<PagePresentation> )
     fun displayError( error: Error )
+    fun displayNextPageError( paginatedData : ArrayList<PagePresentation> )
 }

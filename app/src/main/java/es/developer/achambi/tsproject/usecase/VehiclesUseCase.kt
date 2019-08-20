@@ -1,5 +1,6 @@
 package es.developer.achambi.tsproject.usecase
 
+import android.util.Log
 import es.developer.achambi.coreframework.threading.Error
 import es.developer.achambi.tsproject.VehicleDBRepository
 import es.developer.achambi.tsproject.database.model.data

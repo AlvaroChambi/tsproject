@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
 import es.developer.achambi.coreframework.ui.PagePresentation;
-import es.developer.achambi.coreframework.ui.PaginatedDecorator;
+import es.developer.achambi.coreframework.ui.PaginatedDecoratorAdapter;
 import es.developer.achambi.coreframework.ui.PaginatedInterface;
 import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.TSApplication;
@@ -40,7 +40,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     private static final String LIST_SAVED_STATE = "LIST_SAVED_STATE";
     private static final String PAGE_SAVED_STATE = "PAGED_SAVED_STATE";
     private Adapter adapter;
-    private PaginatedDecorator pageAdapter;
+    private PaginatedDecoratorAdapter pageAdapter;
 
     private EditText brandEditText;
     private EditText modelEditText;
@@ -51,8 +51,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     private EditText pkWEditText;
     private EditText cylindersText;
     private EditText ccEditText;
-
-    private TextView count;
 
     private ImageView advancedSearchButton;
     private View advancedSearchGroup;
@@ -76,7 +74,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public SearchAdapterDecorator provideAdapter() {
         if(adapter == null) {
-            pageAdapter = new PaginatedDecorator(this);
+            pageAdapter = new PaginatedDecoratorAdapter(this);
             adapter = new Adapter(pageAdapter);
         }
         return adapter;
@@ -98,8 +96,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         pkWEditText = header.findViewById(R.id.pkw_input_text);
         cylindersText = header.findViewById(R.id.cylinders_input_text);
         ccEditText = header.findViewById(R.id.cc_input_text);
-
-        count = header.findViewById(R.id.items_count);
 
         advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
         advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
@@ -155,7 +151,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles,
                                 @NonNull ArrayList<PagePresentation> paginatedExtra) {
-        count.setText( String.valueOf( vehicles.size() ));
         pageAdapter.setData(paginatedExtra);
         adapter.setData( VehicleOverviewPresentation.Builder
                 .build( getActivity(), vehicles ) );
@@ -168,16 +163,21 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
+    public void displayNextPageError(@NotNull ArrayList<PagePresentation> paginatedData) {
+        pageAdapter.setData(paginatedData);
+        presentAdapterData();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.info_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_info:
-                startActivity(InfoActivity.getStartIntent(getActivity()));
-                return true;
+        if (item.getItemId() == R.id.action_info) {
+            startActivity(InfoActivity.getStartIntent(getActivity()));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,9 +7,9 @@ class VehicleDBRepository(private val database: AppDatabase) {
     private lateinit var rowData: List<data>
 
     fun requestVehicles() : List<data> {
-        if(::rowData.isInitialized) {
-            return rowData
+        if(!::rowData.isInitialized) {
+            rowData = database.rowDao.queryAll()
         }
-        return database.rowDao.queryAll()
+        return rowData
     }
 }

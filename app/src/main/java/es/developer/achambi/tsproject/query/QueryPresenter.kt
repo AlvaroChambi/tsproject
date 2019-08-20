@@ -22,13 +22,14 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         screen.disableSearchButton()
         val responseHandler = object: ResponseHandler<PaginatedVehicles> {
             override fun onSuccess(response: PaginatedVehicles) {
+
                 screen.enableSearchButton()
                 screen.displayVehicles(response.vehicles, buildPageInfo(response))
             }
 
             override fun onError(error: Error) {
                 screen.enableSearchButton()
-                screen.displayError(error)
+                screen.displayNextPageError(buildPageInfoError())
             }
         }
         request(queryRequest(queryParams, index), responseHandler)
@@ -37,11 +38,13 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
     private fun queryVehicles(queryParams: QueryParams) {
         screen.showLoading()
         screen.disableSearchButton()
+        screen.collapseKeyboard()
         val responseHandler = object: ResponseHandler<PaginatedVehicles> {
             override fun onSuccess(response: PaginatedVehicles) {
                 screen.stopLoading()
                 screen.enableSearchButton()
-                screen.displayVehicles(response.vehicles, buildPageInfo(response))
+                val list = buildPageInfo(response)
+                screen.displayVehicles(response.vehicles, list)
             }
 
             override fun onError(error: Error) {
@@ -56,7 +59,6 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
     fun performSearchSelected(queryParams: QueryParams, expanded: Boolean) {
         if(expanded) {
             screen.collapseAdvancedSearch()
-            screen.collapseKeyboard()
         }
         queryVehicles(queryParams)
     }
@@ -69,11 +71,19 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         }
     }
 
+    private fun buildPageInfoError()
+        :ArrayList<PagePresentation> {
+        val list = ArrayList<PagePresentation>()
+        list.add( PagePresentation(0, true) )
+        return list
+    }
+
+
     private fun buildPageInfo(vehiclesOverviewPage: PaginatedVehicles)
             : ArrayList<PagePresentation> {
         val list = ArrayList<PagePresentation>()
         if( !vehiclesOverviewPage.endPage ) {
-            list.add( PagePresentation( vehiclesOverviewPage.nextPageIndex ) )
+            list.add( PagePresentation( vehiclesOverviewPage.nextPageIndex, false ) )
         }
         return list
     }

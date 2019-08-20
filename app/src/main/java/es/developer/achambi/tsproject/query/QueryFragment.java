@@ -12,12 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
+import es.developer.achambi.coreframework.ui.PagePresentation;
+import es.developer.achambi.coreframework.ui.PaginatedDecorator;
+import es.developer.achambi.coreframework.ui.PaginatedInterface;
 import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.TSApplication;
 import es.developer.achambi.tsproject.about.InfoActivity;
@@ -32,9 +36,11 @@ import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 
 public class QueryFragment extends BaseSearchListFragment implements View.OnClickListener,
         SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation>,
-        QueryScreenInterface {
+        QueryScreenInterface, PaginatedInterface {
     private static final String LIST_SAVED_STATE = "LIST_SAVED_STATE";
+    private static final String PAGE_SAVED_STATE = "PAGED_SAVED_STATE";
     private Adapter adapter;
+    private PaginatedDecorator pageAdapter;
 
     private EditText brandEditText;
     private EditText modelEditText;
@@ -45,6 +51,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     private EditText pkWEditText;
     private EditText cylindersText;
     private EditText ccEditText;
+
+    private TextView count;
 
     private ImageView advancedSearchButton;
     private View advancedSearchGroup;
@@ -68,7 +76,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public SearchAdapterDecorator provideAdapter() {
         if(adapter == null) {
-            adapter = new Adapter();
+            pageAdapter = new PaginatedDecorator(this);
+            adapter = new Adapter(pageAdapter);
         }
         return adapter;
     }
@@ -90,6 +99,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         cylindersText = header.findViewById(R.id.cylinders_input_text);
         ccEditText = header.findViewById(R.id.cc_input_text);
 
+        count = header.findViewById(R.id.items_count);
+
         advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
         advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
         brandEditText.requestFocus();
@@ -99,7 +110,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
 
     @Override
     public void onDataSetup() {
-        presenter.queryVehicles(buildFilters());
+        presenter.setupInitialData(buildFilters());
     }
 
     @Override
@@ -142,7 +153,10 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
-    public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles) {
+    public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles,
+                                @NonNull ArrayList<PagePresentation> paginatedExtra) {
+        count.setText( String.valueOf( vehicles.size() ));
+        pageAdapter.setData(paginatedExtra);
         adapter.setData( VehicleOverviewPresentation.Builder
                 .build( getActivity(), vehicles ) );
         presentAdapterData();
@@ -151,12 +165,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     @Override
     public void displayError(@NonNull Error error) {
         showError(error);
-    }
-
-    @Override
-    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
-        adapter.setData( savedInstanceState.getParcelableArrayList(LIST_SAVED_STATE) );
-        presentAdapterData();
     }
 
     @Override
@@ -210,9 +218,26 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(LIST_SAVED_STATE, adapter.getData());
+        outState.putParcelableArrayList(PAGE_SAVED_STATE, pageAdapter.getData());
     }
 
+    @Override
+    public void onRestoreInstanceState(@NotNull Bundle savedInstanceState) {
+        adapter.setData( savedInstanceState.getParcelableArrayList(LIST_SAVED_STATE) );
+        pageAdapter.setData( savedInstanceState.getParcelableArrayList(PAGE_SAVED_STATE) );
+        presentAdapterData();
+    }
+
+    @Override
+    public void requestNextPage(int nextPageIndex) {
+        presenter.queryNextPage(buildFilters(), nextPageIndex);
+    }
+
+
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {
+        public Adapter(SearchAdapterDecorator adapter) {
+            super(adapter);
+        }
 
         @Override
         public int getLayoutResource() {
@@ -229,12 +254,8 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         public void bindViewHolder(ViewHolder holder, VehicleOverviewPresentation item) {
             holder.binding.setItem( item );
         }
-
-        @Override
-        public int getAdapterViewType() {
-            return 0;
-        }
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ModelResultItemBinding binding;

@@ -38,7 +38,8 @@ public class VehicleOverviewPresentation implements SearchListData, Parcelable {
         percentIncreaseValue = in.readString();
     }
 
-    public static final Creator<VehicleOverviewPresentation> CREATOR = new Creator<VehicleOverviewPresentation>() {
+    public static final Creator<VehicleOverviewPresentation> CREATOR =
+            new Creator<VehicleOverviewPresentation>() {
         @Override
         public VehicleOverviewPresentation createFromParcel(Parcel in) {
             return new VehicleOverviewPresentation(in);
@@ -76,9 +77,9 @@ public class VehicleOverviewPresentation implements SearchListData, Parcelable {
 
     public static class Builder {
         public static VehicleOverviewPresentation build(Context context,
-                                                        VehicleOverview vehicleOverview ) {
+                                                        VehicleOverview vehicleOverview, int id ) {
             return new VehicleOverviewPresentation(
-                    VehiclePresentation.Builder.build( context, vehicleOverview.getVehicle() ),
+                    VehiclePresentation.Builder.build( context, vehicleOverview.getVehicle(), id),
                     buildPercentString( context, VehicleOverview.TAX_VALUE ),
                     buildYearString( context, vehicleOverview.getYear() ),
                     buildValue( context, vehicleOverview.getDepreciationValue() ),
@@ -88,8 +89,9 @@ public class VehicleOverviewPresentation implements SearchListData, Parcelable {
         public static ArrayList<VehicleOverviewPresentation> build(
                 Context context, ArrayList<VehicleOverview> vehicleOverviews ) {
             ArrayList<VehicleOverviewPresentation> presentations = new ArrayList<>();
-            for( VehicleOverview overview : vehicleOverviews ) {
-                presentations.add( build( context, overview ) );
+            for( int i = 0; i < vehicleOverviews.size(); i++ ) {
+                VehicleOverview overview = vehicleOverviews.get(i);
+                presentations.add( build( context, overview, i ) );
             }
             return presentations;
         }

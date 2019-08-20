@@ -3,7 +3,7 @@ package es.developer.achambi.tsproject.query
 import android.arch.lifecycle.Lifecycle
 import es.developer.achambi.coreframework.threading.*
 import es.developer.achambi.tsproject.models.QueryParams
-import es.developer.achambi.tsproject.models.VehicleOverview
+import es.developer.achambi.tsproject.usecase.PaginatedVehicles
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
 import org.junit.Before
 import org.junit.Test
@@ -36,25 +36,25 @@ class QueryPresenterTest {
     @Test
     fun `query items success`() {
         val queryParams = QueryParams.Builder().build()
-        val result = ArrayList<VehicleOverview>()
-        `when`(useCase.retrieveVehicles(queryParams)).thenReturn(result)
+        val result = PaginatedVehicles()
+        `when`(useCase.retrieveVehicles(queryParams, 0)).thenReturn(result)
 
-        queryPresenter.queryVehicles(queryParams)
+        queryPresenter.queryNextPage(queryParams, 0)
 
         verify(screen, times(1)).showLoading()
         verify(screen, times(1)).disableSearchButton()
         verify(screen, times(1)).stopLoading()
         verify(screen, times(1)).enableSearchButton()
-        verify(screen, times(1)).displayVehicles(result)
+        verify(screen, times(1)).displayVehicles(result.vehicles, any())
     }
 
     @Test
     fun `query items error`() {
         val error = Error()
         val queryParams = QueryParams.Builder().build()
-        `when`(useCase.retrieveVehicles(queryParams)).thenThrow(error)
+        `when`(useCase.retrieveVehicles(queryParams, 0)).thenThrow(error)
 
-        queryPresenter.queryVehicles(queryParams)
+        queryPresenter.queryNextPage(queryParams, 0)
 
         verify(screen, times(1)).showLoading()
         verify(screen, times(1)).disableSearchButton()

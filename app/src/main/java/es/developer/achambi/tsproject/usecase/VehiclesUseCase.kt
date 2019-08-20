@@ -1,35 +1,55 @@
 package es.developer.achambi.tsproject.usecase
 
 import es.developer.achambi.coreframework.threading.Error
-import es.developer.achambi.tsproject.database.AppDatabase
+import es.developer.achambi.tsproject.VehicleDBRepository
 import es.developer.achambi.tsproject.database.model.data
+import es.developer.achambi.tsproject.models.PaginationHandler
 import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.models.VehicleOverview
 
-class VehiclesUseCase( private val database: AppDatabase ) {
-    private lateinit var rawData : List<data>
+class PaginatedVehicles (val vehicles: ArrayList<VehicleOverview> = ArrayList(),
+                         var endPage: Boolean = false,
+                         var nextPageIndex: Int = 0)
+
+class VehiclesUseCase( private val repository: VehicleDBRepository,
+                       private val paginationHandler: PaginationHandler ) {
+    private val pageSize = 20
+    private var currentQueryParams = QueryParams.Builder().build()
+    private val paginatedVehicles = PaginatedVehicles()
 
     @Throws(Error::class)
-    fun retrieveVehicles( queryParams: QueryParams ) : ArrayList<VehicleOverview> {
-        val vehicles = ArrayList<VehicleOverview>()
-        rawData = fetchData()
+    fun retrieveVehicles( queryParams: QueryParams, nextPageIndex: Int )
+            : PaginatedVehicles {
+        resolveCache(queryParams)
+        this.currentQueryParams = queryParams
+        val filtered = applyFilters( repository.requestVehicles(), queryParams )
 
-        val filtered = applyFilters( rawData, queryParams )
-        filtered.forEach {
-            val vehicle = VehicleOverview()
-            vehicle.vehicle = it
-            vehicle.year = queryParams.period
-            vehicles.add(vehicle)
+        if(nextPageIndex < 0) {
+            throw Error("Invalid nextPageIndex, index should be in bounds")
         }
 
-        return vehicles
+        val( start, end ) = paginationHandler.getNextPageRange(nextPageIndex,filtered.size,
+                pageSize)
+        for (i in start until end) {
+            val vehicle = VehicleOverview()
+            vehicle.vehicle = filtered[i]
+            vehicle.year = queryParams.period
+            paginatedVehicles.vehicles.add(vehicle)
+        }
+        paginatedVehicles.endPage = paginationHandler.isEndPage(nextPageIndex,filtered.size,pageSize)
+        paginatedVehicles.nextPageIndex = end
+        return paginatedVehicles
     }
 
-    private fun fetchData() : List<data> {
-        if(::rawData.isInitialized) {
-            return rawData
+    /**
+     * Clear previous cache if the query params doesn't match
+     */
+    private fun resolveCache(queryParams: QueryParams) {
+        if(queryParams != currentQueryParams) {
+            paginatedVehicles.vehicles.clear()
+            paginatedVehicles.endPage = false
+            paginatedVehicles.nextPageIndex = 0
         }
-        return database.rowDao.queryAll()
     }
 
     private fun applyFilters( rawVehicles : List<data>, queryParams: QueryParams ) : ArrayList<data>{

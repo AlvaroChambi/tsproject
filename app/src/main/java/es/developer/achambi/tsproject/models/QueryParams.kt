@@ -1,6 +1,6 @@
 package es.developer.achambi.tsproject.models
 
-class QueryParams(
+data class QueryParams(
     val brand : String,
     val model : String,
     val period : String,

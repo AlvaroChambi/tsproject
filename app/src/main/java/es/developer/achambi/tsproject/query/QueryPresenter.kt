@@ -2,9 +2,10 @@ package es.developer.achambi.tsproject.query
 
 import android.arch.lifecycle.Lifecycle
 import es.developer.achambi.coreframework.threading.*
+import es.developer.achambi.coreframework.ui.PagePresentation
 import es.developer.achambi.coreframework.ui.Presenter
 import es.developer.achambi.tsproject.models.QueryParams
-import es.developer.achambi.tsproject.models.VehicleOverview
+import es.developer.achambi.tsproject.usecase.PaginatedVehicles
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
 
 class QueryPresenter( private val useCase: VehiclesUseCase,
@@ -13,14 +14,37 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
                       executor: ExecutorInterface )
     : Presenter<QueryScreenInterface>( screen, lifecycle, executor ) {
 
-    fun queryVehicles(queryParams: QueryParams) {
+    fun setupInitialData(queryParams: QueryParams) {
+        queryVehicles(queryParams)
+    }
+
+    fun queryNextPage(queryParams: QueryParams, index: Int) {
+        screen.disableSearchButton()
+        val responseHandler = object: ResponseHandler<PaginatedVehicles> {
+            override fun onSuccess(response: PaginatedVehicles) {
+
+                screen.enableSearchButton()
+                screen.displayVehicles(response.vehicles, buildPageInfo(response))
+            }
+
+            override fun onError(error: Error) {
+                screen.enableSearchButton()
+                screen.displayNextPageError(buildPageInfoError())
+            }
+        }
+        request(queryRequest(queryParams, index), responseHandler)
+    }
+
+    private fun queryVehicles(queryParams: QueryParams) {
         screen.showLoading()
         screen.disableSearchButton()
-        val responseHandler = object: ResponseHandler<ArrayList<VehicleOverview>> {
-            override fun onSuccess(response: ArrayList<VehicleOverview>) {
+        screen.collapseKeyboard()
+        val responseHandler = object: ResponseHandler<PaginatedVehicles> {
+            override fun onSuccess(response: PaginatedVehicles) {
                 screen.stopLoading()
                 screen.enableSearchButton()
-                screen.displayVehicles(response)
+                val list = buildPageInfo(response)
+                screen.displayVehicles(response.vehicles, list)
             }
 
             override fun onError(error: Error) {
@@ -29,13 +53,12 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
                 screen.displayError(error)
             }
         }
-        request(queryRequest(queryParams), responseHandler)
+        request(queryRequest(queryParams, 0), responseHandler)
     }
 
     fun performSearchSelected(queryParams: QueryParams, expanded: Boolean) {
         if(expanded) {
             screen.collapseAdvancedSearch()
-            screen.collapseKeyboard()
         }
         queryVehicles(queryParams)
     }
@@ -48,10 +71,27 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         }
     }
 
-    private fun queryRequest(queryParams: QueryParams) : Request<ArrayList<VehicleOverview>>  {
-        return object: Request<ArrayList<VehicleOverview>> {
-            override fun perform(): ArrayList<VehicleOverview> {
-                return useCase.retrieveVehicles(queryParams)
+    private fun buildPageInfoError()
+        :ArrayList<PagePresentation> {
+        val list = ArrayList<PagePresentation>()
+        list.add( PagePresentation(0, true) )
+        return list
+    }
+
+
+    private fun buildPageInfo(vehiclesOverviewPage: PaginatedVehicles)
+            : ArrayList<PagePresentation> {
+        val list = ArrayList<PagePresentation>()
+        if( !vehiclesOverviewPage.endPage ) {
+            list.add( PagePresentation( vehiclesOverviewPage.nextPageIndex, false ) )
+        }
+        return list
+    }
+
+    private fun queryRequest(queryParams: QueryParams, index: Int) : Request<PaginatedVehicles> {
+        return object: Request<PaginatedVehicles> {
+            override fun perform(): PaginatedVehicles {
+                return useCase.retrieveVehicles(queryParams, index)
             }
         }
     }

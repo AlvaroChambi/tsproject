@@ -90,20 +90,11 @@ public class VehiclePresentation implements SearchListData, Parcelable {
 
     @Override
     public long getId() {
-        if( model != null ) {
-            return model.hashCode();
-        } else {
-            return 0;
-        }
-
+        return id;
     }
 
     static class Builder {
-        public static VehiclePresentation build(Context context, data data) {
-            int id = 0;
-            if(data.modelo != null) {
-                id = data.modelo.hashCode();
-            }
+        public static VehiclePresentation build(Context context, data data, int id) {
             return new VehiclePresentation(
                     id,
                     data.marca,

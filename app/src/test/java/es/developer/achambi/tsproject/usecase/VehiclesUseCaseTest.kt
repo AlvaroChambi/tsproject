@@ -189,6 +189,7 @@ class VehiclesUseCaseTest {
 
     @Test
     fun `test paginated query`() {
+        dataResult.add( validData )
         `when`(paginationHandler.getNextPageRange(anyInt(), anyInt(), anyInt()))
                 .thenReturn( Pair(0, 1) )
         `when`(paginationHandler.isEndPage(anyInt(), anyInt(), anyInt())).thenReturn(true)

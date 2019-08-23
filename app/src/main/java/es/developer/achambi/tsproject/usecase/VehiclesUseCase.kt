@@ -1,16 +1,14 @@
 package es.developer.achambi.tsproject.usecase
 
-import android.util.Log
 import es.developer.achambi.coreframework.threading.Error
+import es.developer.achambi.coreframework.ui.pagination.PaginatedData
 import es.developer.achambi.tsproject.VehicleDBRepository
 import es.developer.achambi.tsproject.database.model.data
 import es.developer.achambi.tsproject.models.PaginationHandler
 import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.models.VehicleOverview
 
-class PaginatedVehicles (val vehicles: ArrayList<VehicleOverview> = ArrayList(),
-                         var endPage: Boolean = false,
-                         var nextPageIndex: Int = 0)
+class PaginatedVehicles : PaginatedData<VehicleOverview>()
 
 class VehiclesUseCase( private val repository: VehicleDBRepository,
                        private val paginationHandler: PaginationHandler ) {
@@ -35,7 +33,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
             val vehicle = VehicleOverview()
             vehicle.vehicle = filtered[i]
             vehicle.year = queryParams.period
-            paginatedVehicles.vehicles.add(vehicle)
+            paginatedVehicles.data.add(vehicle)
         }
         paginatedVehicles.endPage = paginationHandler.isEndPage(nextPageIndex,filtered.size,pageSize)
         paginatedVehicles.nextPageIndex = end
@@ -47,7 +45,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
      */
     private fun resolveCache(queryParams: QueryParams) {
         if(queryParams != currentQueryParams) {
-            paginatedVehicles.vehicles.clear()
+            paginatedVehicles.data.clear()
             paginatedVehicles.endPage = false
             paginatedVehicles.nextPageIndex = 0
         }

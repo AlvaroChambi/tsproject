@@ -1,9 +1,9 @@
 package es.developer.achambi.tsproject.query
 
 import es.developer.achambi.coreframework.threading.Error
-import es.developer.achambi.coreframework.ui.PagePresentation
+import es.developer.achambi.coreframework.ui.pagination.PaginatedPresentation
 import es.developer.achambi.coreframework.ui.Screen
-import es.developer.achambi.tsproject.models.VehicleOverview
+import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation
 
 interface QueryScreenInterface : Screen {
     fun showLoading()
@@ -13,7 +13,8 @@ interface QueryScreenInterface : Screen {
     fun expandAdvancedSearch()
     fun collapseAdvancedSearch()
     fun collapseKeyboard()
-    fun displayVehicles( vehicles: ArrayList<VehicleOverview>, paginatedData : ArrayList<PagePresentation> )
+    fun displayVehicles( vehicles: ArrayList<VehicleOverviewPresentation>,
+                         paginatedData : ArrayList<PaginatedPresentation> )
     fun displayError( error: Error )
-    fun displayNextPageError( paginatedData : ArrayList<PagePresentation> )
+    fun displayNextPageError( paginatedData : ArrayList<PaginatedPresentation> )
 }

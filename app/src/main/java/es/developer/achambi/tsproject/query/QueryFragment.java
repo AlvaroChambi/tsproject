@@ -12,23 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 import es.developer.achambi.coreframework.threading.Error;
-import es.developer.achambi.coreframework.ui.PagePresentation;
-import es.developer.achambi.coreframework.ui.PaginatedDecoratorAdapter;
-import es.developer.achambi.coreframework.ui.PaginatedInterface;
+import es.developer.achambi.coreframework.ui.pagination.PaginatedPresentation;
+import es.developer.achambi.coreframework.ui.pagination.PaginatedDecoratorAdapter;
+import es.developer.achambi.coreframework.ui.pagination.PaginatedInterface;
 import es.developer.achambi.coreframework.utils.WindowUtils;
 import es.developer.achambi.tsproject.TSApplication;
 import es.developer.achambi.tsproject.about.InfoActivity;
 import es.developer.achambi.tsproject.R;
 import es.developer.achambi.tsproject.details.VehicleDetailsFragment;
 import es.developer.achambi.tsproject.models.QueryParams;
-import es.developer.achambi.tsproject.models.VehicleOverview;
 import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
@@ -149,11 +147,10 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
-    public void displayVehicles(@NotNull ArrayList<VehicleOverview> vehicles,
-                                @NonNull ArrayList<PagePresentation> paginatedExtra) {
+    public void displayVehicles(@NotNull ArrayList<VehicleOverviewPresentation> vehicles,
+                                @NonNull ArrayList<PaginatedPresentation> paginatedExtra) {
         pageAdapter.setData(paginatedExtra);
-        adapter.setData( VehicleOverviewPresentation.Builder
-                .build( getActivity(), vehicles ) );
+        adapter.setData(vehicles);
         presentAdapterData();
     }
 
@@ -163,7 +160,7 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
-    public void displayNextPageError(@NotNull ArrayList<PagePresentation> paginatedData) {
+    public void displayNextPageError(@NotNull ArrayList<PaginatedPresentation> paginatedData) {
         pageAdapter.setData(paginatedData);
         presentAdapterData();
     }

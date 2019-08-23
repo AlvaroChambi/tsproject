@@ -40,10 +40,10 @@ public class ValueDetailsView extends ConstraintLayout {
     }
 
     public void displayDetails(VehicleOverviewPresentation item) {
-        baseValue.setText( item.vehicle.value );
+        baseValue.setText(item.getVehicle().getValue());
         depreciationText.setText( getResources()
-                .getString( R.string.vehicle_value_details_depreciation, item.year ) );
-        depreciationValue.setText( item.depreciationValue );
-        taxIncrease.setText( item.percentIncreaseValue );
+                .getString( R.string.vehicle_value_details_depreciation, item.getYear()) );
+        depreciationValue.setText(item.getDepreciationValue());
+        taxIncrease.setText(item.getPercentIncreaseValue());
     }
 }

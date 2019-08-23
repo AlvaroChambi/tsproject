@@ -69,7 +69,7 @@ class VehiclesUseCaseTest {
         dataResult.add( corruptedData )
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertTrue( result.vehicles.isEmpty() )
+        assertTrue( result.data.isEmpty() )
     }
 
     @Test
@@ -79,7 +79,7 @@ class VehiclesUseCaseTest {
                 .thenReturn( Pair(0, 1) )
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertFalse( result.vehicles.isEmpty() )
+        assertFalse( result.data.isEmpty() )
     }
 
     @Test
@@ -100,8 +100,8 @@ class VehiclesUseCaseTest {
                 .thenReturn( Pair(0, 1) )
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertEquals( 1, result.vehicles.size )
-        assertEquals( "model", result.vehicles[0].vehicle.modelo )
+        assertEquals( 1, result.data.size )
+        assertEquals( "model", result.data[0].vehicle.modelo )
     }
 
     @Test(expected = NumberFormatException::class)
@@ -125,7 +125,7 @@ class VehiclesUseCaseTest {
                 .thenReturn( Pair(0, 1) )
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertFalse( result.vehicles.isEmpty() )
+        assertFalse( result.data.isEmpty() )
     }
 
     @Test
@@ -137,7 +137,7 @@ class VehiclesUseCaseTest {
 
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertTrue( result.vehicles.isEmpty() )
+        assertTrue( result.data.isEmpty() )
     }
 
     @Test
@@ -153,8 +153,8 @@ class VehiclesUseCaseTest {
                 .thenReturn( Pair(0, 1) )
         val result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertEquals( 1, result.vehicles.size )
-        assertEquals( "30,5", result.vehicles[0].vehicle.cvf )
+        assertEquals( 1, result.data.size )
+        assertEquals( "30,5", result.data[0].vehicle.cvf )
     }
 
     @Test
@@ -167,8 +167,8 @@ class VehiclesUseCaseTest {
                 .build()
         var result = useCase.retrieveVehicles( queryParams, 0 )
 
-        assertEquals( 1, result.vehicles.size )
-        assertEquals( "model", result.vehicles[0].vehicle.modelo )
+        assertEquals( 1, result.data.size )
+        assertEquals( "model", result.data[0].vehicle.modelo )
 
         dataResult.clear()
         dataResult.add( validDataB )
@@ -178,8 +178,8 @@ class VehiclesUseCaseTest {
 
         result = useCase.retrieveVehicles(queryParams, 0)
 
-        assertEquals( 1, result.vehicles.size )
-        assertEquals( "B", result.vehicles[0].vehicle.modelo )
+        assertEquals( 1, result.data.size )
+        assertEquals( "B", result.data[0].vehicle.modelo )
     }
 
     @Test(expected = Error::class)

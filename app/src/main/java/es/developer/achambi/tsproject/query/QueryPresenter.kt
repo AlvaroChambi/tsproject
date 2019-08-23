@@ -2,16 +2,19 @@ package es.developer.achambi.tsproject.query
 
 import android.arch.lifecycle.Lifecycle
 import es.developer.achambi.coreframework.threading.*
-import es.developer.achambi.coreframework.ui.PagePresentation
+import es.developer.achambi.coreframework.ui.pagination.PaginatedBuilder
 import es.developer.achambi.coreframework.ui.Presenter
 import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.usecase.PaginatedVehicles
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
+import es.developer.achambi.tsproject.views.builder.VehicleOverviewBuilder
 
 class QueryPresenter( private val useCase: VehiclesUseCase,
                       screen: QueryScreenInterface,
                       lifecycle : Lifecycle,
-                      executor: ExecutorInterface )
+                      executor: ExecutorInterface,
+                      private val presentationBuilder: VehicleOverviewBuilder,
+                      private val paginatedBuilder: PaginatedBuilder)
     : Presenter<QueryScreenInterface>( screen, lifecycle, executor ) {
 
     fun setupInitialData(queryParams: QueryParams) {
@@ -22,14 +25,15 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         screen.disableSearchButton()
         val responseHandler = object: ResponseHandler<PaginatedVehicles> {
             override fun onSuccess(response: PaginatedVehicles) {
-
                 screen.enableSearchButton()
-                screen.displayVehicles(response.vehicles, buildPageInfo(response))
+                screen.displayVehicles(
+                        presentationBuilder.build(response.data),
+                        paginatedBuilder.buildPageInfo(response))
             }
 
             override fun onError(error: Error) {
                 screen.enableSearchButton()
-                screen.displayNextPageError(buildPageInfoError())
+                screen.displayNextPageError(paginatedBuilder.buildPageInfoError())
             }
         }
         request(queryRequest(queryParams, index), responseHandler)
@@ -43,8 +47,8 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
             override fun onSuccess(response: PaginatedVehicles) {
                 screen.stopLoading()
                 screen.enableSearchButton()
-                val list = buildPageInfo(response)
-                screen.displayVehicles(response.vehicles, list)
+                val list = paginatedBuilder.buildPageInfo(response)
+                screen.displayVehicles(presentationBuilder.build(response.data), list)
             }
 
             override fun onError(error: Error) {
@@ -69,23 +73,6 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         } else {
             screen.expandAdvancedSearch()
         }
-    }
-
-    private fun buildPageInfoError()
-        :ArrayList<PagePresentation> {
-        val list = ArrayList<PagePresentation>()
-        list.add( PagePresentation(0, true) )
-        return list
-    }
-
-
-    private fun buildPageInfo(vehiclesOverviewPage: PaginatedVehicles)
-            : ArrayList<PagePresentation> {
-        val list = ArrayList<PagePresentation>()
-        if( !vehiclesOverviewPage.endPage ) {
-            list.add( PagePresentation( vehiclesOverviewPage.nextPageIndex, false ) )
-        }
-        return list
     }
 
     private fun queryRequest(queryParams: QueryParams, index: Int) : Request<PaginatedVehicles> {

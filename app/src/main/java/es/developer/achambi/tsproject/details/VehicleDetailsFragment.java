@@ -41,7 +41,7 @@ public class VehicleDetailsFragment extends BaseDialogFragment {
     public void onViewSetup(View view, @Nullable Bundle savedInstanceState) {
         VehicleDetailsFragmentLayoutBinding binding = DataBindingUtil.bind(view);
         valueDetailsView = view.findViewById(R.id.value_details_view);
-        binding.setItem( presentation.vehicle );
+        binding.setItem(presentation.getVehicle());
         valueDetailsView.displayDetails(presentation);
     }
 }

@@ -40,4 +40,8 @@
     <string name="gestoria_afines_phone_text">Gestoría Afines: %1$s</string>
     <string name="phone_uri">tel:%1$s</string>
     <string name="info_screen_title_text">Proceso de tasación e impuesto aplicado.</string>
+    <plurals name="search_result_count_description">
+        <item quantity="one">%1$s vehículo encontrados</item>
+        <item quantity="other">%1$s vehículos encontrados</item>
+    </plurals>
 </resources>

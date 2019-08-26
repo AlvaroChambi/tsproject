@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,33 +24,23 @@ import es.developer.achambi.tsproject.TSApplication;
 import es.developer.achambi.tsproject.about.InfoActivity;
 import es.developer.achambi.tsproject.R;
 import es.developer.achambi.tsproject.details.VehicleDetailsFragment;
-import es.developer.achambi.tsproject.models.QueryParams;
+import es.developer.achambi.tsproject.views.SearchVehicleHeader;
+import es.developer.achambi.tsproject.views.SearchVehicleHeaderListener;
+import es.developer.achambi.tsproject.views.presentation.SearchVehicleHeaderPresentation;
 import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation;
 import es.developer.achambi.tsproject.databinding.ModelResultItemBinding;
 import es.developer.achambi.coreframework.ui.BaseSearchListFragment;
 import es.developer.achambi.coreframework.ui.SearchAdapterDecorator;
 
-public class QueryFragment extends BaseSearchListFragment implements View.OnClickListener,
+public class QueryFragment extends BaseSearchListFragment implements
+        SearchVehicleHeaderListener,
         SearchAdapterDecorator.OnItemClickedListener<VehicleOverviewPresentation>,
         QueryScreenInterface, PaginatedInterface {
     private static final String LIST_SAVED_STATE = "LIST_SAVED_STATE";
     private static final String PAGE_SAVED_STATE = "PAGED_SAVED_STATE";
     private Adapter adapter;
     private PaginatedDecoratorAdapter pageAdapter;
-
-    private EditText brandEditText;
-    private EditText modelEditText;
-    private EditText periodEditText;
-    private EditText gdEditText;
-    private EditText cvfEditText;
-    private EditText cvEditText;
-    private EditText pkWEditText;
-    private EditText cylindersText;
-    private EditText ccEditText;
-
-    private ImageView advancedSearchButton;
-    private View advancedSearchGroup;
-    private boolean expanded;
+    private SearchVehicleHeader searchVehicleHeader;
 
     private QueryPresenter presenter;
 
@@ -80,45 +68,18 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
 
     @Override
     public int getHeaderLayoutResource() {
-        return R.layout.filter_header;
+        return R.layout.search_header_layout;
     }
 
     @Override
     public void onHeaderSetup(View header) {
-        brandEditText = header.findViewById(R.id.brand_edit_text);
-        modelEditText = header.findViewById(R.id.model_edit_text);
-        periodEditText = header.findViewById(R.id.period_edit_text);
-        gdEditText = header.findViewById(R.id.gd_input_text);
-        cvEditText = header.findViewById(R.id.cv_input_text);
-        cvfEditText = header.findViewById(R.id.cvf_input_text);
-        pkWEditText = header.findViewById(R.id.pkw_input_text);
-        cylindersText = header.findViewById(R.id.cylinders_input_text);
-        ccEditText = header.findViewById(R.id.cc_input_text);
-
-        advancedSearchButton = header.findViewById(R.id.header_advanced_search_action_button);
-        advancedSearchGroup = header.findViewById(R.id.advanced_search_group);
-        brandEditText.requestFocus();
-        header.findViewById(R.id.header_search_button).setOnClickListener(this);
-        advancedSearchButton.setOnClickListener(this);
+        searchVehicleHeader = header.findViewById(R.id.search_header);
+        searchVehicleHeader.setListener(this);
     }
 
     @Override
     public void onDataSetup() {
-        presenter.setupInitialData(buildFilters());
-    }
-
-    @Override
-    public void expandAdvancedSearch() {
-        expanded = true;
-        advancedSearchButton.setImageResource(R.drawable.baseline_expand_less_black_18dp);
-        advancedSearchGroup.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void collapseAdvancedSearch() {
-        expanded = false;
-        advancedSearchButton.setImageResource(R.drawable.baseline_expand_more_black_18dp);
-        advancedSearchGroup.setVisibility(View.GONE);
+        presenter.setupInitialData(searchVehicleHeader.getQuery());
     }
 
     @Override
@@ -138,12 +99,12 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
 
     @Override
     public void disableSearchButton() {
-        advancedSearchButton.setEnabled(false);
+        searchVehicleHeader.disableSearch();
     }
 
     @Override
     public void enableSearchButton() {
-        advancedSearchButton.setEnabled(true);
+        searchVehicleHeader.enableSearch();
     }
 
     @Override
@@ -166,6 +127,21 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
     }
 
     @Override
+    public void requestNextPage(int nextPageIndex) {
+        presenter.queryNextPage(searchVehicleHeader.getQuery(), nextPageIndex);
+    }
+
+    @Override
+    public void displaySearchResultsCount(@NotNull SearchVehicleHeaderPresentation presentation) {
+        searchVehicleHeader.display(presentation);
+    }
+
+    @Override
+    public void onSearchButtonSelected() {
+        presenter.performSearchSelected(searchVehicleHeader.getQuery());
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.info_menu, menu);
     }
@@ -177,30 +153,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        if( v.getId() == R.id.header_search_button ) {
-            presenter.performSearchSelected(buildFilters(), expanded);
-        } else if( v.getId() == R.id.header_advanced_search_action_button ) {
-            presenter.switchAdvancedSearchSelected(expanded);
-        }
-    }
-
-    private QueryParams buildFilters() {
-        QueryParams.Builder builder = new QueryParams.Builder();
-        return builder.brand( brandEditText.getText().toString() )
-                .model( modelEditText.getText().toString() )
-                .period( periodEditText.getText().toString() )
-                .gd( gdEditText.getText().toString() )
-                .cvf( cvfEditText.getText().toString() )
-                .cc( ccEditText.getText().toString() )
-                .cylinders( cylindersText.getText().toString() )
-                .cv( cvEditText.getText().toString() )
-                .pkw( pkWEditText.getText().toString() )
-                .build();
     }
 
     @Override
@@ -224,12 +176,6 @@ public class QueryFragment extends BaseSearchListFragment implements View.OnClic
         pageAdapter.setData( savedInstanceState.getParcelableArrayList(PAGE_SAVED_STATE) );
         presentAdapterData();
     }
-
-    @Override
-    public void requestNextPage(int nextPageIndex) {
-        presenter.queryNextPage(buildFilters(), nextPageIndex);
-    }
-
 
     class Adapter extends SearchAdapterDecorator<VehicleOverviewPresentation,ViewHolder> {
         public Adapter(SearchAdapterDecorator adapter) {

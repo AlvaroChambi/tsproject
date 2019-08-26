@@ -8,13 +8,15 @@ import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.usecase.PaginatedVehicles
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
 import es.developer.achambi.tsproject.views.builder.VehicleOverviewBuilder
+import es.developer.achambi.tsproject.views.presentation.SearchVehicleBuilder
 
 class QueryPresenter( private val useCase: VehiclesUseCase,
                       screen: QueryScreenInterface,
                       lifecycle : Lifecycle,
                       executor: ExecutorInterface,
                       private val presentationBuilder: VehicleOverviewBuilder,
-                      private val paginatedBuilder: PaginatedBuilder)
+                      private val paginatedBuilder: PaginatedBuilder,
+                      private val searchHeaderBuilder: SearchVehicleBuilder)
     : Presenter<QueryScreenInterface>( screen, lifecycle, executor ) {
 
     fun setupInitialData(queryParams: QueryParams) {
@@ -49,6 +51,7 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
                 screen.enableSearchButton()
                 val list = paginatedBuilder.buildPageInfo(response)
                 screen.displayVehicles(presentationBuilder.build(response.data), list)
+                screen.displaySearchResultsCount( searchHeaderBuilder.build(response) )
             }
 
             override fun onError(error: Error) {
@@ -60,19 +63,8 @@ class QueryPresenter( private val useCase: VehiclesUseCase,
         request(queryRequest(queryParams, 0), responseHandler)
     }
 
-    fun performSearchSelected(queryParams: QueryParams, expanded: Boolean) {
-        if(expanded) {
-            screen.collapseAdvancedSearch()
-        }
+    fun performSearchSelected(queryParams: QueryParams) {
         queryVehicles(queryParams)
-    }
-
-    fun switchAdvancedSearchSelected(expanded: Boolean) {
-        if( expanded ) {
-            screen.collapseAdvancedSearch()
-        } else {
-            screen.expandAdvancedSearch()
-        }
     }
 
     private fun queryRequest(queryParams: QueryParams, index: Int) : Request<PaginatedVehicles> {

@@ -7,6 +7,7 @@ import es.developer.achambi.tsproject.database.AppDatabase
 import es.developer.achambi.tsproject.models.PaginationHandler
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
 import es.developer.achambi.tsproject.views.builder.VehicleOverviewBuilder
+import es.developer.achambi.tsproject.views.presentation.SearchVehicleBuilder
 import es.developer.achambi.tsproject.views.presentation.VehicleBuilder
 
 class TSApplication : Application() {
@@ -23,6 +24,6 @@ class TSApplication : Application() {
 
         queryPresenterFactory = QueryPresenterFactory(executor, useCase,
                 VehicleOverviewBuilder(this, VehicleBuilder(this) ),
-                PaginatedBuilder(this))
+                PaginatedBuilder(this), SearchVehicleBuilder(this))
     }
 }

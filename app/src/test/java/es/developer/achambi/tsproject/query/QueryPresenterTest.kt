@@ -8,6 +8,7 @@ import es.developer.achambi.tsproject.models.QueryParams
 import es.developer.achambi.tsproject.usecase.PaginatedVehicles
 import es.developer.achambi.tsproject.usecase.VehiclesUseCase
 import es.developer.achambi.tsproject.views.builder.VehicleOverviewBuilder
+import es.developer.achambi.tsproject.views.presentation.SearchVehicleBuilder
 import es.developer.achambi.tsproject.views.presentation.VehicleOverviewPresentation
 import org.junit.Before
 import org.junit.Test
@@ -31,13 +32,15 @@ class QueryPresenterTest {
     lateinit var presentationBuilder: VehicleOverviewBuilder
     @Mock
     lateinit var paginatedBuilder: PaginatedBuilder
+    @Mock
+    lateinit var searchVehicleBuilder: SearchVehicleBuilder
     lateinit var queryPresenter: QueryPresenter
     val pagePresentation = ArrayList<PaginatedPresentation>()
     val presentations = ArrayList<VehicleOverviewPresentation>()
     @Before
     fun setup() {
         queryPresenter = QueryPresenter(useCase, screen, lifecycle, executor,presentationBuilder,
-                paginatedBuilder)
+                paginatedBuilder, searchVehicleBuilder)
         `when`(lifecycle.currentState).thenReturn( lifecycleState )
         `when`(lifecycleState.isAtLeast(Lifecycle.State.STARTED)).thenReturn(true)
         pagePresentation.add(PaginatedPresentation(0, false))
@@ -51,7 +54,7 @@ class QueryPresenterTest {
         `when`(presentationBuilder.build(result.data)).thenReturn(presentations)
         `when`(paginatedBuilder.buildPageInfo(result)).thenReturn(pagePresentation)
 
-        queryPresenter.performSearchSelected(queryParams, expanded = false)
+        queryPresenter.performSearchSelected(queryParams)
 
         verify(screen, times(1)).collapseKeyboard()
         verify(screen, times(1)).showLoading()
@@ -70,10 +73,9 @@ class QueryPresenterTest {
         `when`(presentationBuilder.build(result.data)).thenReturn(presentations)
         `when`(paginatedBuilder.buildPageInfo(result)).thenReturn(pagePresentation)
 
-        queryPresenter.performSearchSelected(queryParams, expanded = true)
+        queryPresenter.performSearchSelected(queryParams)
 
         verify(screen, times(1)).collapseKeyboard()
-        verify(screen, times(1)).collapseAdvancedSearch()
         verify(screen, times(1)).showLoading()
         verify(screen, times(1)).disableSearchButton()
         verify(screen, times(1)).stopLoading()
@@ -88,7 +90,7 @@ class QueryPresenterTest {
         val queryParams = QueryParams.Builder().build()
         `when`(useCase.retrieveVehicles(queryParams, 0)).thenThrow(error)
 
-        queryPresenter.performSearchSelected(queryParams, expanded = false)
+        queryPresenter.performSearchSelected(queryParams)
 
         verify(screen, times(1)).collapseKeyboard()
         verify(screen, times(1)).showLoading()

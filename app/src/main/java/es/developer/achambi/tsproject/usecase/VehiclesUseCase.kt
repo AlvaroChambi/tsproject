@@ -19,13 +19,16 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
     @Throws(Error::class)
     fun retrieveVehicles( queryParams: QueryParams, nextPageIndex: Int )
             : PaginatedVehicles {
-        resolveCache(queryParams)
-        this.currentQueryParams = queryParams
-        val filtered = applyFilters( repository.requestVehicles(), queryParams )
-
         if(nextPageIndex < 0) {
             throw Error("Invalid nextPageIndex, index should be in bounds")
         }
+        if( currentQueryParams == queryParams
+                && nextPageIndex != paginatedVehicles.nextPageIndex ){
+            return paginatedVehicles
+        }
+        resolveCache(queryParams)
+        this.currentQueryParams = queryParams
+        val filtered = applyFilters( repository.requestVehicles(), queryParams )
 
         val( start, end ) = paginationHandler.getNextPageRange(nextPageIndex,filtered.size,
                 pageSize)
@@ -35,6 +38,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
             vehicle.year = queryParams.period
             paginatedVehicles.data.add(vehicle)
         }
+        paginatedVehicles.count = filtered.size
         paginatedVehicles.endPage = paginationHandler.isEndPage(nextPageIndex,filtered.size,pageSize)
         paginatedVehicles.nextPageIndex = end
         return paginatedVehicles
@@ -47,6 +51,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
         if(queryParams != currentQueryParams) {
             paginatedVehicles.data.clear()
             paginatedVehicles.endPage = false
+            paginatedVehicles.count = 0
             paginatedVehicles.nextPageIndex = 0
         }
     }

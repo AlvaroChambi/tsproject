@@ -38,6 +38,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
             vehicle.year = queryParams.period
             paginatedVehicles.data.add(vehicle)
         }
+        paginatedVehicles.data.sortBy { it.percentIncreaseValue }
         paginatedVehicles.count = filtered.size
         paginatedVehicles.endPage = paginationHandler.isEndPage(nextPageIndex,filtered.size,pageSize)
         paginatedVehicles.nextPageIndex = end

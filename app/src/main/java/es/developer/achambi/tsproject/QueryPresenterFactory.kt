@@ -1,6 +1,6 @@
 package es.developer.achambi.tsproject
 
-import android.arch.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle
 import es.developer.achambi.coreframework.threading.MainExecutor
 import es.developer.achambi.coreframework.ui.pagination.PaginatedBuilder
 import es.developer.achambi.tsproject.query.QueryPresenter

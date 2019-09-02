@@ -15,7 +15,7 @@ android {
         targetSdkVersion 28
         versionCode 3
         versionName "1.1.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -63,6 +63,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.8.47'
     testImplementation 'org.mockito:mockito-inline:2.8.47'
 
-    kapt "android.arch.persistence.room:compiler:1.1.1"
+    kapt 'androidx.room:room-compiler:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

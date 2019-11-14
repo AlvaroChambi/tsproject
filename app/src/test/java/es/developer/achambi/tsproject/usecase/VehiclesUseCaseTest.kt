@@ -8,7 +8,6 @@ import junit.framework.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
@@ -26,6 +25,7 @@ class VehiclesUseCaseTest {
     private var validDataB = data()
     private lateinit var queryParams : QueryParams
     private val corruptedData = data()
+    private val corruptedPeriodData = data()
     private val dataResult = ArrayList<data>()
 
     @Before
@@ -37,6 +37,18 @@ class VehiclesUseCaseTest {
                 .thenReturn( Pair(0, 0) )
 
         corruptedData.modelo = "model"
+
+        corruptedPeriodData.modelo = "model"
+        corruptedPeriodData.marca = "m"
+        corruptedPeriodData.periodo = ""
+
+        corruptedPeriodData.cc = "cc"
+        corruptedPeriodData.cilindros = "cy"
+        corruptedPeriodData.cv = "cv"
+        corruptedPeriodData.cvf = "30,5"
+        corruptedPeriodData.gD = "gd"
+        corruptedPeriodData.potencia = "p"
+        corruptedPeriodData.valor = "v"
 
         validData.modelo = "model"
         validData.marca = "m"
@@ -112,6 +124,16 @@ class VehiclesUseCaseTest {
                 .build()
 
         useCase.retrieveVehicles( queryParams, 0 )
+    }
+
+    @Test
+    fun `corrupted data empty period`() {
+        dataResult.add(corruptedPeriodData)
+        queryParams = QueryParams.Builder()
+                .period("2010").build()
+
+        val result = useCase.retrieveVehicles(queryParams, 0)
+        assertEquals( 0, result.data.size )
     }
 
     @Test

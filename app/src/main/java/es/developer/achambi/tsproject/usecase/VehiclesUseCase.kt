@@ -97,7 +97,7 @@ class VehiclesUseCase( private val repository: VehicleDBRepository,
     }
 
     private fun isInPeriod(year: String, period: String): Boolean {
-        if (year.isEmpty()) {
+        if (year.isEmpty() || period.isEmpty()) {
             return true
         }
         val firstYear = period.substring(0, period.lastIndexOf("-"))
